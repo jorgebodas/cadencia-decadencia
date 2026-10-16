@@ -797,8 +797,7 @@ function renderDetail(r){
  const stat=(v,u,l)=>`<div class="rv-stat"><strong>${v}${u?`<small>${u}</small>`:''}</strong><span>${l}</span></div>`;
  detail.innerHTML=`<div class="rv-meta">${escapeHtml(meta)}</div><h3 class="rv-h">${escapeHtml(r.title)}</h3>${r.locationLabel?`<div class="rv-zone">${escapeHtml(r.locationLabel)}</div>`:''}
  <div class="rv-stats">${stat(fmtKm(r.distance),'km','Distancia')}${stat('+'+fmtElev(r.elevation),'m','Desnivel')}${stat(fmtDur(r.duration_s),'','Tiempo')}${stat(r.avg_speed?fmtKm(Math.round(r.avg_speed*10)/10):'—',r.avg_speed?'km/h':'','Media')}</div>
- <section class="rv-block"><h4>Perfil</h4>${rvProfile(r)}</section>
- <section class="rv-block"><h4>Quién fue</h4>${ridersMarkup(r)}</section>`;
+ <section class="rv-block"><h4>Perfil</h4>${rvProfile(r)}</section>`;
  if(r.track){
   box.innerHTML='<div class="map-loading">Cargando recorrido GPS…</div>';
   fetchTrack(r.track).then(points=>{r.points=points;if(activeRouteId===r.id&&box.isConnected)renderInteractiveMap(box,{points},'',r.id)}).catch(e=>{console.error('Track no disponible:',e);if(activeRouteId!==r.id)return;if(r.center)renderInteractiveMap(box,{center:r.center},'',r.id);else box.innerHTML='<div class="map-loading">Track no disponible</div>'});
