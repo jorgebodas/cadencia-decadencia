@@ -26,8 +26,14 @@ test('the three original routes are preserved with their exact values', () => {
     assert.equal(r.type, old.type);
     assert.equal(r.avg_speed_kmh, old.avg_speed);
     assert.equal(r.avg_hr_bpm, old.avg_hr);
-    assert.deepEqual(r.map_center, old.center);
-    assert.equal(r.start_location.label, old.locationLabel);
+    if (r.track) {
+      // Once a real GPS track is attached the map follows it, and a missing place may be filled in.
+      assert.ok(r.map_center && r.preview && r.elevation_profile, 'route with a track has map and profile');
+      if (old.locationLabel) assert.equal(r.start_location.label, old.locationLabel);
+    } else {
+      assert.deepEqual(r.map_center, old.center);
+      assert.equal(r.start_location.label, old.locationLabel);
+    }
     // Editorial notes may be removed, but never rewritten.
     if (r.source_note != null) assert.equal(r.source_note, old.sourceNote);
     assert.equal(r.stats_locked, true, 'reviewed numbers are protected from recomputation');
