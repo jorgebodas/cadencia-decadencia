@@ -47,7 +47,10 @@ ${pts}
 // A throwaway copy of the repository data so tests never touch the real database.
 export function tempRepo() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'cadencia-'));
-  for (const rel of ['data/routes.json', 'data/riders.json', 'data/schema/routes.schema.json', 'data/schema/riders.schema.json', 'data/schema/track.schema.json', 'CNAME']) {
+  // Start from a fixed database (the three original routes) so tests do not depend on the live data.
+  fs.mkdirSync(path.join(dir, 'data'), { recursive: true });
+  fs.copyFileSync(path.join(ROOT, 'tests/fixtures/routes-base.json'), path.join(dir, 'data/routes.json'));
+  for (const rel of ['data/riders.json', 'data/schema/routes.schema.json', 'data/schema/riders.schema.json', 'data/schema/track.schema.json', 'CNAME']) {
     fs.mkdirSync(path.dirname(path.join(dir, rel)), { recursive: true });
     fs.copyFileSync(path.join(ROOT, rel), path.join(dir, rel));
   }
