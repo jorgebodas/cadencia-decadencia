@@ -431,6 +431,17 @@ a.scroll-link:hover,a.scroll-link:focus-visible{color:var(--acid)!important}
 .routes-grid>.route-card .stat-foot{justify-content:space-between;align-items:flex-end;gap:20px}
 .routes-grid>.route-card .stat-foot .stat-profile{margin-bottom:0}
 .routes-grid>.route-card .stat-gain{bottom:0}
+
+/* v0.30 — Safari-safe card layout: no flexbox on the <button>; map and data panel are positioned
+   with a fixed data height so every card lines up and the map always has height. */
+.routes-grid>.route-card{--panel-h:196px;display:block;padding:0;-webkit-appearance:none;appearance:none;color:#141a0f}
+.routes-grid>.route-card .route-bg-map{position:absolute;top:10px;left:10px;right:10px;bottom:var(--panel-h);height:auto;flex:none}
+.routes-grid>.route-card .card-neon.card-stat{position:absolute;left:0;right:0;bottom:0;height:var(--panel-h);display:flex;flex-direction:column;padding:16px 26px 20px}
+.routes-grid>.route-card .stat-main{margin-top:26px}
+.routes-grid>.route-card .stat-foot{margin-top:auto}
+.archive-button{color:var(--ink);-webkit-appearance:none;appearance:none}
+@media(max-width:990px){.routes-grid>.route-card{--panel-h:176px}.routes-grid>.route-card .card-neon.card-stat{padding:14px 18px 16px}.routes-grid>.route-card .stat-main{margin-top:20px}}
+@media(max-width:670px){.routes-grid>.route-card{--panel-h:196px}.routes-grid>.route-card .card-neon.card-stat{padding:16px 24px 20px}.routes-grid>.route-card .stat-main{margin-top:24px}}
 </style></head><body>
 <header class="site-header"><button aria-controls="mobile-nav" aria-expanded="false" aria-label="Abrir menú de navegación" class="mobile-menu-trigger" id="mobile-menu-trigger" type="button"><span>MENÚ</span><svg aria-hidden="true" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="15"><path d="m5 9 7 7 7-7"></path></svg></button><a aria-label="Cadencia y Decadencia — inicio" class="wordmark" href="#inicio">CADENCIA Y DECADENCIA</a><nav aria-label="Navegación principal" class="site-nav"><a href="#historia">NOSOTROS</a><a href="#equipo">LA BANDA</a><a href="#rutas">RUTAS</a><a href="#reto">PRÓXIMO RETO</a></nav><nav aria-label="Navegación móvil" class="mobile-nav" id="mobile-nav" inert=""><a href="#historia">NOSOTROS</a><a href="#equipo">LA BANDA</a><a href="#rutas">RUTAS</a><a href="#reto">PRÓXIMO RETO</a></nav></header>
 <main><section aria-label="Presentación" class="hero" id="inicio"><div class="hero-content"><div class="hero-intro"><span class="hero-location">RIVAS · MADRID</span><p class="hero-copy"><strong>Rutas, kilómetros y buena compañía.</strong><br/>Salimos desde Rivas con muchas ganas de dar pedales, descubrir caminos nuevos y pasar una buena mañana juntos. Siempre volvemos con las piernas cansadas, alguna historia nueva y la sensación de que el próximo finde repetimos.</p><a class="scroll-link mobile-explore" href="#historia">EXPLORAR <span class="scroll-circle"><svg aria-hidden="true" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.85" viewbox="0 0 24 24" width="17"><path d="M12 4v16m-7-7 7 7 7-7"></path></svg></span></a></div></div><div class="hero-bottom"><a class="scroll-link" href="#historia">EXPLORAR <span class="scroll-circle"><svg aria-hidden="true" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.85" viewbox="0 0 24 24" width="17"><path d="M12 4v16m-7-7 7 7 7-7"></path></svg></span></a></div></section>
