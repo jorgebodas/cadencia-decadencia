@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { PATHS, ROOT, SETTINGS } from './config.mjs';
 import { compareActivities, trackToPoints, VERDICT } from './match.mjs';
-import { buildPreview } from './activity.mjs';
+import { buildPreview, buildProfile } from './activity.mjs';
 
 export const ROUTE_STAT_FIELDS = ['distance_km', 'elevation_gain_m', 'moving_time_s', 'elapsed_time_s', 'avg_speed_kmh', 'avg_hr_bpm'];
 
@@ -189,9 +189,11 @@ export class RouteDb {
       route.track = withTrack.track;
       route.map_center = withTrack.map_center;
       route.preview = track ? buildPreview(track.points) : null;
+      route.elevation_profile = track ? buildProfile(track.points) : null;
     } else {
       route.track = null;
       route.preview = null;
+      route.elevation_profile = null;
     }
     route.participants = [...new Set([...(route.participants || []), ...route.activities.map((a) => a.rider).filter(Boolean)])];
     return route;

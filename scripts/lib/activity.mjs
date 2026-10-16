@@ -108,6 +108,25 @@ export function buildTrack(points, startMs) {
   ]);
 }
 
+// Elevation profile for the home cards: `samples` altitudes at equal distance steps along the track.
+export function buildProfile(trackPoints, samples = 48) {
+  const pts = trackPoints.filter(([, , ele]) => ele != null).map(([lat, lon, ele]) => ({ lat, lon, ele }));
+  if (pts.length < 10 || pts.length < trackPoints.length * 0.5) return null;
+  const cum = [0];
+  for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + haversine(pts[i - 1], pts[i]));
+  const total = cum.at(-1);
+  if (!total) return null;
+  const out = [];
+  for (let k = 0, j = 0; k < samples; k++) {
+    const d = (total * k) / (samples - 1);
+    while (j < pts.length - 2 && cum[j + 1] < d) j++;
+    const span = cum[j + 1] - cum[j] || 1;
+    out.push(pts[j].ele + ((pts[j + 1].ele - pts[j].ele) * (d - cum[j])) / span);
+  }
+  // Light smoothing so sensor noise does not read as terrain.
+  return out.map((_, i) => Math.round(out.slice(Math.max(0, i - 1), i + 2).reduce((s, v, __, a) => s + v / a.length, 0)));
+}
+
 export function buildPreview(trackPoints) {
   const pts = trackPoints.map(([lat, lon]) => ({ lat, lon }));
   return simplifyTo(pts, SETTINGS.maxPreviewPoints, 8).map((p) => [p.lat, p.lon]);

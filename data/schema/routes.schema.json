@@ -57,6 +57,7 @@
         "map_center": { "$ref": "#/$defs/latlon" },
         "track": { "$ref": "#/$defs/trackPath" },
         "preview": { "type": ["array", "null"], "items": { "$ref": "#/$defs/latlon" } },
+        "elevation_profile": { "type": ["array", "null"], "items": { "type": "number", "minimum": -500, "maximum": 9000 } },
         "participants": { "type": "array", "items": { "$ref": "#/$defs/id" } },
         "primary_activity": { "type": ["string", "null"] },
         "pin_primary": { "type": "boolean" },
