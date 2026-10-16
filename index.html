@@ -504,7 +504,7 @@ a.rv-rider:hover{border-color:var(--ink)}
 .rv-dock button:hover{background:#ffffff14}.rv-dock button:active{background:#ffffff22}
 .rv-dock button:disabled{opacity:.3;cursor:default;background:none}
 .rv-dock button:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
-.rv-dock .rv-current{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:0 10px;text-align:left}
+.rv-dock .rv-current{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:0 14px;text-align:left}
 .rv-current b{max-width:100%;font:600 14px/1.15 var(--sans);letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rv-current small{font:400 11px/1.3 var(--sans);color:#a9ad9f}
 .rv-dock .rv-close{background:var(--acid);color:#141a0f}.rv-dock .rv-close:hover{background:#dcff4a}
@@ -546,9 +546,7 @@ a.rv-rider:hover{border-color:var(--ink)}
 <section class="rv-map"><div class="map-shell rv-mapbox" id="route-map"></div></section>
 <article aria-live="polite" class="rv-content" id="archive-detail"></article>
 <nav aria-label="Navegación de rutas" class="rv-dock">
-<button id="rv-prev" type="button" aria-label="Ruta anterior"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
 <button class="rv-current" id="rv-current" type="button" aria-label="Elegir ruta" aria-controls="rv-menu"><b id="rv-title"></b><small id="rv-pos"></small></button>
-<button id="rv-next" type="button" aria-label="Ruta siguiente"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
 <button id="rv-menu-btn" type="button" aria-label="Lista de rutas" aria-expanded="false" aria-controls="rv-menu"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h11M4 12h11M4 17h11"/><path class="chev" d="m17.5 10.5 2 2 2-2"/></svg></button>
 <button class="rv-close" id="close-archive" type="button" aria-label="Cerrar rutas"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
 </nav>
@@ -677,7 +675,6 @@ function closeArchive(){closeRvMenu();overlay.classList.remove('open');overlay.s
 document.getElementById('open-archive').addEventListener('click',()=>openArchive(null,{list:true}));document.getElementById('close-archive').addEventListener('click',closeArchive);
 function rvGo(step){const list=rvOrdered(),k=list.findIndex(r=>r.id===activeRouteId)+step;if(k<0||k>=list.length)return;rvShow(list[k].id)}
 function rvShow(id){const c=document.getElementById('archive-detail');c.classList.add('rv-leaving');setTimeout(()=>{activeRouteId=id;renderArchive();c.classList.remove('rv-leaving');shell.scrollTo({top:0});c.scrollTo({top:0})},170)}
-document.getElementById('rv-prev').addEventListener('click',()=>rvGo(-1));document.getElementById('rv-next').addEventListener('click',()=>rvGo(1));
 /* Route list dropdown with search */
 const rvMenu=document.getElementById('rv-menu'),rvMenuBtn=document.getElementById('rv-menu-btn'),rvQ=document.getElementById('rv-q');
 const fold=v=>String(v||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
@@ -709,7 +706,6 @@ function renderArchive(){
  document.getElementById('rv-title').textContent=r?r.title:(routesState==='loading'?'Cargando…':'Rutas');
  document.getElementById('rv-pos').textContent=r?`${k+1} de ${list.length} · ${formatCardDate(r.date).replace(/ \d+$/,'').toLowerCase()}`:'';
  document.getElementById('archive-counter').textContent=list.length;
- document.getElementById('rv-prev').disabled=k<=0;document.getElementById('rv-next').disabled=k<0||k>=list.length-1;
  if(rvMenu.classList.contains('open'))renderRvMenu();
  renderDetail(r);
 }
