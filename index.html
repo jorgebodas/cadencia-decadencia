@@ -358,7 +358,7 @@ a.scroll-link:hover,a.scroll-link:focus-visible{color:var(--acid)!important}
 @media(prefers-reduced-motion:reduce){.mobile-nav,.mobile-menu-trigger svg{transition:none!important}}
 
 /* v0.24 — data-driven routes: GPS preview on cards, loading/error states, riders in detail */
-.card-track{position:absolute;left:50%;top:34%;z-index:3;overflow:visible;pointer-events:none}
+.card-track{position:absolute;left:50%;top:50%;z-index:3;overflow:visible;pointer-events:none}
 .card-track path{fill:none;stroke:var(--acid);stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 1px 3px rgba(10,16,13,.75))}
 .routes-grid>.route-card-loading{cursor:default;pointer-events:none}
 .route-card-loading .card-neon .metric strong{opacity:.45}
@@ -401,6 +401,23 @@ a.scroll-link:hover,a.scroll-link:focus-visible{color:var(--acid)!important}
 .card-neon.card-stat .cta-circle{bottom:18px}
 @media(max-width:990px){.card-neon.card-stat{padding:18px 16px 14px}.stat-distance{font-size:34px}.stat-profile{min-width:80px}.stat-head{font-size:14px}}
 @media(max-width:670px){.routes-grid>.route-card{height:465px}.card-neon.card-stat{padding:22px 20px 16px}.stat-distance{font-size:clamp(38px,11vw,46px)}.stat-profile{flex-basis:140px}}
+
+/* v0.27 — lime card with the map inset at the top, data on the lime below (no separate panel) */
+.routes-grid>.route-card{background:var(--acid);border:0;box-shadow:0 16px 36px rgba(24,38,27,.08);transition:transform .65s cubic-bezier(.16,1,.3,1),box-shadow .65s cubic-bezier(.16,1,.3,1),background .5s}
+.routes-grid>.route-card:hover,.routes-grid>.route-card:focus-visible{background:#d6ff28}
+.routes-grid>.route-card{display:flex;flex-direction:column;padding:10px}
+.routes-grid>.route-card .route-bg-map{position:relative;inset:auto;flex:1 1 auto;min-height:0;border-radius:20px;transform:none!important}
+.routes-grid>.route-card .map-center-dot{top:50%}
+.routes-grid>.route-card .route-attribution{top:24px;right:26px}
+.routes-grid>.route-card .map-unavailable{top:50%}
+.routes-grid>.route-card .card-neon.card-stat{position:relative;left:auto;right:auto;bottom:auto;flex:0 0 auto;background:transparent!important;border-radius:0;padding:20px 16px 12px;transform:none!important}
+.stat-main{gap:28px;margin-top:16px}
+.stat-profile{flex:0 0 110px;min-width:0;height:44px;margin-bottom:4px}
+.stat-peak-label{top:-8px}
+.stat-gain strong{font-size:20px}
+.stat-foot{margin-top:16px;min-height:0;padding-right:0}
+@media(max-width:990px){.routes-grid>.route-card .card-neon.card-stat{padding:18px 10px 10px}.stat-profile{flex-basis:84px}.stat-main{gap:16px}}
+@media(max-width:670px){.routes-grid>.route-card .card-neon.card-stat{padding:20px 14px 12px}.stat-profile{flex-basis:110px}}
 </style></head><body>
 <header class="site-header"><button aria-controls="mobile-nav" aria-expanded="false" aria-label="Abrir menú de navegación" class="mobile-menu-trigger" id="mobile-menu-trigger" type="button"><span>MENÚ</span><svg aria-hidden="true" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="15"><path d="m5 9 7 7 7-7"></path></svg></button><a aria-label="Cadencia y Decadencia — inicio" class="wordmark" href="#inicio">CADENCIA Y DECADENCIA</a><nav aria-label="Navegación principal" class="site-nav"><a href="#historia">NOSOTROS</a><a href="#equipo">LA BANDA</a><a href="#rutas">RUTAS</a><a href="#reto">PRÓXIMO RETO</a></nav><nav aria-label="Navegación móvil" class="mobile-nav" id="mobile-nav" inert=""><a href="#historia">NOSOTROS</a><a href="#equipo">LA BANDA</a><a href="#rutas">RUTAS</a><a href="#reto">PRÓXIMO RETO</a></nav></header>
 <main><section aria-label="Presentación" class="hero" id="inicio"><div class="hero-content"><div class="hero-intro"><span class="hero-location">RIVAS · MADRID</span><p class="hero-copy"><strong>Rutas, kilómetros y buena compañía.</strong><br/>Salimos desde Rivas con muchas ganas de dar pedales, descubrir caminos nuevos y pasar una buena mañana juntos. Siempre volvemos con las piernas cansadas, alguna historia nueva y la sensación de que el próximo finde repetimos.</p><a class="scroll-link mobile-explore" href="#historia">EXPLORAR <span class="scroll-circle"><svg aria-hidden="true" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.85" viewbox="0 0 24 24" width="17"><path d="M12 4v16m-7-7 7 7 7-7"></path></svg></span></a></div></div><div class="hero-bottom"><a class="scroll-link" href="#historia">EXPLORAR <span class="scroll-circle"><svg aria-hidden="true" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.85" viewbox="0 0 24 24" width="17"><path d="M12 4v16m-7-7 7 7 7-7"></path></svg></span></a></div></section>
@@ -473,33 +490,32 @@ function tileMapMarkup(center,opts={}){
 }
 /* Real GPS preview drawn over the same tiles, in the card's lime accent. */
 function cardTrackMarkup(r){
- const pts=r.preview,z=fitZoom(pts,250,165),xy=pts.map(p=>project(p[0],p[1],z)),xs=xy.map(p=>p[0]),ys=xy.map(p=>p[1]);
+ const pts=r.preview,z=fitZoom(pts,240,170),xy=pts.map(p=>project(p[0],p[1],z)),xs=xy.map(p=>p[0]),ys=xy.map(p=>p[1]);
  const cx=(Math.min(...xs)+Math.max(...xs))/2,cy=(Math.min(...ys)+Math.max(...ys))/2,n=256*2**z;
  const center=[Math.atan(Math.sinh(Math.PI*(1-2*cy/n)))*180/Math.PI,cx/n*360-180];
  const d=xy.map((p,i)=>(i?'L':'M')+(p[0]-cx).toFixed(1)+' '+(p[1]-cy).toFixed(1)).join('');
- return tileMapMarkup(center,{zoom:z,top:'34%'})+`<svg class="card-track" width="1" height="1" aria-hidden="true"><path d="${d}"/></svg>`;
+ return tileMapMarkup(center,{zoom:z})+`<svg class="card-track" width="1" height="1" aria-hidden="true"><path d="${d}"/></svg>`;
 }
 /* v0.26 — card data panel: title / date, big distance, real elevation profile, duration. */
 function profileMarkup(r,index){
  const gain=r.elevation!=null?'+'+fmtElev(r.elevation)+' m':null;
  const p=r.profile;
  if(!p||p.length<5)return gain?`<span class="stat-gain"><strong>${gain}</strong><small>de subida</small></span>`:'';
- const W=150,H=58,top=16,min=Math.min(...p),max=Math.max(...p),span=Math.max(max-min,1);
+ const W=110,H=44,top=14,min=Math.min(...p),max=Math.max(...p),span=Math.max(max-min,1);
  const xy=p.map((v,i)=>[i/(p.length-1)*W,top+(1-(v-min)/span)*(H-top-2)]);
  const line=xy.map((q,i)=>(i?'L':'M')+q[0].toFixed(1)+' '+q[1].toFixed(1)).join('');
  const peak=xy[p.indexOf(max)],lx=Math.min(Math.max(peak[0],18),W-18);
  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Perfil de altitud, ${gain||''} de subida"><defs><linearGradient id="pg-${index}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".22"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs><path d="${line}L${W} ${H}L0 ${H}Z" fill="url(#pg-${index})"/><path d="${line}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/><line x1="${peak[0].toFixed(1)}" y1="${peak[1].toFixed(1)}" x2="${peak[0].toFixed(1)}" y2="${H}" stroke="currentColor" stroke-opacity=".25" stroke-width="1" vector-effect="non-scaling-stroke"/></svg><span class="stat-peak" style="left:${(peak[0]/W*100).toFixed(1)}%;top:${(peak[1]/H*100).toFixed(1)}%"></span>${gain?`<span class="stat-peak-label" style="left:${(lx/W*100).toFixed(1)}%">${gain}</span>`:''}`;
 }
 const CLOCK_ICON='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M12 7.5V12l3 2"/></svg>';
-const ARROW_ICON='<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19 19 5M8 5h11v11"/></svg>';
 function recentCard(r,index){
  const center=r.center&&r.center.length===2,hasGPS=!!r.preview;
  return `<button class="route-card" type="button" data-route="${escapeHtml(r.id)}" aria-label="Abrir detalle de ${escapeHtml(r.title)}">
-  <div class="route-bg-map">${hasGPS?cardTrackMarkup(r):tileMapMarkup(r.center,{top:'34%'})}${center&&!hasGPS?'<div class="map-center-dot"></div>':''}</div>
-  ${!center&&!hasGPS?'<div class="map-unavailable">Ubicación del recorrido pendiente</div>':''}${center||hasGPS?'<span class="route-attribution">© OpenStreetMap</span>':''}
+  <div class="route-bg-map">${hasGPS?cardTrackMarkup(r):tileMapMarkup(r.center)}${center&&!hasGPS?'<div class="map-center-dot"></div>':''}${!center&&!hasGPS?'<div class="map-unavailable">Ubicación del recorrido pendiente</div>':''}</div>
+  ${center||hasGPS?'<span class="route-attribution">© OpenStreetMap</span>':''}
   <div class="card-neon card-stat"><span class="stat-head">${escapeHtml(r.title)} <span>/ ${escapeHtml(formatCardDate(r.date).toLowerCase())}</span></span>
   <div class="stat-main"><span class="stat-distance">${fmtKm(r.distance)}<small> km</small></span><span class="stat-profile">${profileMarkup(r,index)}</span></div>
-  <div class="stat-foot"><span class="stat-duration">${CLOCK_ICON}<strong>${fmtDur(r.duration_s)}</strong> de ruta</span><span class="cta-circle" aria-hidden="true">${ARROW_ICON}</span></div></div>
+  <div class="stat-foot"><span class="stat-duration">${CLOCK_ICON}<strong>${fmtDur(r.duration_s)}</strong></span></div></div>
  </button>`;
 }
 function loadingCard(){return `<div class="route-card route-card-loading" aria-hidden="true"><div class="route-bg-map"><div class="map-blank-pattern"></div></div><div class="card-neon card-stat"><span class="stat-head">Cargando rutas…</span><div class="stat-main"><span class="stat-distance">—<small> km</small></span></div><div class="stat-foot"><span class="stat-duration">${CLOCK_ICON}<strong>—</strong></span></div></div></div>`}
