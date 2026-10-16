@@ -504,15 +504,9 @@ a.rv-rider:hover{border-color:var(--ink)}
 .rv-dock button:hover{background:#ffffff14}.rv-dock button:active{background:#ffffff22}
 .rv-dock button:disabled{opacity:.3;cursor:default;background:none}
 .rv-dock button:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
-.rv-dock .rv-current{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:0 14px;text-align:left}
-.rv-current b{max-width:100%;font:600 14px/1.15 var(--sans);letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rv-current small{font:400 11px/1.3 var(--sans);color:#a9ad9f}
 .rv-dock .rv-close{background:var(--acid);color:#141a0f}.rv-dock .rv-close:hover{background:#dcff4a}
-#rv-menu-btn .chev{transition:transform .25s ease;transform-origin:19.5px 11.5px}
-#rv-menu-btn[aria-expanded=true]{background:#ffffff1f}#rv-menu-btn[aria-expanded=true] .chev{transform:rotate(180deg)}
 .rv-menu{position:fixed;z-index:21;left:50%;bottom:calc(max(16px,env(safe-area-inset-bottom)) + 70px);width:min(calc(100vw - 24px),480px);max-height:min(56svh,440px);display:flex;flex-direction:column;background:#141a0f;color:#fff;border-radius:20px;box-shadow:0 24px 50px rgba(10,14,8,.38);transform:translate(-50%,10px) scale(.98);transform-origin:bottom center;opacity:0;visibility:hidden;transition:opacity .2s ease,transform .25s cubic-bezier(.2,.8,.2,1),visibility 0s .25s}
 .rv-menu.open{opacity:1;visibility:visible;transform:translate(-50%,0) scale(1);transition:opacity .2s ease,transform .25s cubic-bezier(.2,.8,.2,1)}
-.rv-menu-head{display:flex;justify-content:space-between;padding:16px 18px 10px;font:500 10px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:#a9ad9f}
 .rv-menu-field{display:flex;align-items:center;gap:10px;margin:0 10px 6px;height:46px;padding:0 14px;border-radius:14px;background:#ffffff12;color:#a9ad9f}
 .rv-menu-field:focus-within{background:#ffffff1c;box-shadow:inset 0 0 0 1.5px var(--acid);color:#fff}
 .rv-menu-field input{flex:1;min-width:0;border:0;outline:0;background:none;color:#fff;font:400 16px var(--sans);-webkit-appearance:none;appearance:none}
@@ -533,9 +527,6 @@ a.rv-rider:hover{border-color:var(--ink)}
  .rv-dock,.rv-menu{left:calc(57.45% / 2)}
 }
 /* Calendar popover: same dark material as the list */
-#rv-cal-btn[aria-expanded=true]{background:#ffffff1f}
-.rv-cal{position:fixed;z-index:21;left:50%;bottom:calc(max(16px,env(safe-area-inset-bottom)) + 70px);width:min(calc(100vw - 24px),480px);padding:12px 12px 14px;background:#141a0f;color:#fff;border-radius:20px;box-shadow:0 24px 50px rgba(10,14,8,.38);transform:translate(-50%,10px) scale(.98);transform-origin:bottom center;opacity:0;visibility:hidden;transition:opacity .2s ease,transform .25s cubic-bezier(.2,.8,.2,1),visibility 0s .25s}
-.rv-cal.open{opacity:1;visibility:visible;transform:translate(-50%,0) scale(1);transition:opacity .2s ease,transform .25s cubic-bezier(.2,.8,.2,1)}
 .rv-cal-head{display:flex;align-items:center;justify-content:space-between;padding:2px 2px 10px}
 .rv-cal-head b{font:600 15px var(--sans);letter-spacing:-.02em}
 .rv-cal-head button{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff}
@@ -553,9 +544,25 @@ a.rv-rider:hover{border-color:var(--ink)}
 .rv-cal-grid button:focus-visible,.rv-cal-head button:focus-visible{outline:2px solid var(--acid);outline-offset:1px}
 .rv-cal-day:not(:empty){margin-top:10px;border-top:1px solid #ffffff1a;padding-top:6px}
 .rv-cal-foot{margin-top:10px;padding:0 4px;font:400 12px var(--sans);color:#a9ad9f}
-@media(min-width:900px){.rv-cal{left:calc(57.45% / 2)}}
-@media(prefers-reduced-motion:reduce){.rv-cal{transition:none!important}}
 @media(prefers-reduced-motion:reduce){.rv,.rv-shell,.rv-menu,.rv-content{transition:none!important}}
+
+/* v0.38 — dock = two separate floating controls: "Rutas" (list + calendar panel) and close */
+.rv-dock{width:auto;padding:0;gap:10px;background:none;box-shadow:none;border-radius:0}
+.rv-dock .rv-trigger{display:inline-flex;align-items:center;gap:10px;height:54px;padding:0 22px 0 18px;border-radius:99px;background:#141a0f;color:#fff;font:600 15px var(--sans);letter-spacing:-.01em;box-shadow:0 14px 34px rgba(10,14,8,.32)}
+.rv-dock .rv-trigger:hover{background:#222a1b}
+.rv-dock .rv-trigger[aria-expanded=true]{background:#2a3322}
+.rv-dock .rv-close{width:54px;height:54px;min-width:54px;border-radius:50%;background:var(--acid);color:#141a0f;box-shadow:0 14px 34px rgba(10,14,8,.28)}
+.rv-menu{bottom:calc(max(16px,env(safe-area-inset-bottom)) + 66px);max-height:min(66svh,560px)}
+.rv-menu-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 10px 8px}
+.rv-tabs{display:flex;padding:3px;border-radius:13px;background:#ffffff12}
+.rv-tabs button{height:36px;padding:0 16px;border-radius:10px;font:600 13px var(--sans);color:#a9ad9f}
+.rv-tabs button[aria-selected=true]{background:var(--acid);color:#141a0f}
+.rv-tabs button:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
+.rv-count{padding-right:8px;font:500 10px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:#a9ad9f}
+.rv-pane{display:flex;flex-direction:column;min-height:0;flex:1}
+.rv-pane[hidden]{display:none}
+.rv-pane .rv-menu-list{flex:1}
+.rv-pane-cal{padding:2px 12px 14px;overflow-y:auto}
 </style></head><body>
 <header class="site-header"><button aria-controls="mobile-nav" aria-expanded="false" aria-label="Abrir menú de navegación" class="mobile-menu-trigger" id="mobile-menu-trigger" type="button"><span>MENÚ</span><svg aria-hidden="true" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="15"><path d="m5 9 7 7 7-7"></path></svg></button><a aria-label="Cadencia y Decadencia — inicio" class="wordmark" href="#inicio">CADENCIA Y DECADENCIA</a><nav aria-label="Navegación principal" class="site-nav"><a href="#historia">NOSOTROS</a><a href="#equipo">LA BANDA</a><a href="#rutas">RUTAS</a><a href="#reto">PRÓXIMO RETO</a></nav><nav aria-label="Navegación móvil" class="mobile-nav" id="mobile-nav" inert=""><a href="#historia">NOSOTROS</a><a href="#equipo">LA BANDA</a><a href="#rutas">RUTAS</a><a href="#reto">PRÓXIMO RETO</a></nav></header>
 <main><section aria-label="Presentación" class="hero" id="inicio"><div class="hero-content"><div class="hero-intro"><span class="hero-location">RIVAS · MADRID</span><p class="hero-copy"><strong>Rutas, kilómetros y buena compañía.</strong><br/>Salimos desde Rivas con muchas ganas de dar pedales, descubrir caminos nuevos y pasar una buena mañana juntos. Siempre volvemos con las piernas cansadas, alguna historia nueva y la sensación de que el próximo finde repetimos.</p><a class="scroll-link mobile-explore" href="#historia">EXPLORAR <span class="scroll-circle"><svg aria-hidden="true" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.85" viewbox="0 0 24 24" width="17"><path d="M12 4v16m-7-7 7 7 7-7"></path></svg></span></a></div></div><div class="hero-bottom"><a class="scroll-link" href="#historia">EXPLORAR <span class="scroll-circle"><svg aria-hidden="true" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.85" viewbox="0 0 24 24" width="17"><path d="M12 4v16m-7-7 7 7 7-7"></path></svg></span></a></div></section>
@@ -569,13 +576,14 @@ a.rv-rider:hover{border-color:var(--ink)}
 <section class="rv-map"><div class="map-shell rv-mapbox" id="route-map"></div></section>
 <article aria-live="polite" class="rv-content" id="archive-detail"></article>
 <nav aria-label="Navegación de rutas" class="rv-dock">
-<button class="rv-current" id="rv-current" type="button" aria-label="Elegir ruta" aria-controls="rv-menu"><b id="rv-title"></b><small id="rv-pos"></small></button>
-<button id="rv-menu-btn" type="button" aria-label="Lista de rutas" aria-expanded="false" aria-controls="rv-menu"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h11M4 12h11M4 17h11"/><path class="chev" d="m17.5 10.5 2 2 2-2"/></svg></button>
-<button id="rv-cal-btn" type="button" aria-label="Calendario de salidas" aria-expanded="false" aria-controls="rv-cal"><svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></button>
+<button class="rv-trigger" id="rv-menu-btn" type="button" aria-expanded="false" aria-controls="rv-menu"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg><span>Rutas</span></button>
 <button class="rv-close" id="close-archive" type="button" aria-label="Cerrar rutas"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
 </nav>
-<div class="rv-cal" id="rv-cal" role="dialog" aria-label="Calendario de salidas"><div class="rv-cal-head"><button type="button" id="rv-cal-prev" aria-label="Mes anterior"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button><b id="rv-cal-month" aria-live="polite"></b><button type="button" id="rv-cal-next" aria-label="Mes siguiente"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button></div><div class="rv-cal-week" aria-hidden="true"><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span></div><div class="rv-cal-grid" id="rv-cal-grid"></div><div class="rv-cal-day" id="rv-cal-day"></div><div class="rv-cal-foot" id="rv-cal-foot"></div></div>
-<div class="rv-menu" id="rv-menu" role="listbox" aria-label="Todas las rutas"><div class="rv-menu-head"><span>Todas las rutas</span><span id="archive-counter"></span></div><label class="rv-menu-field"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="rv-q" type="text" inputmode="search" enterkeyhint="go" placeholder="Buscar ruta, pueblo o ciclista" autocomplete="off" aria-label="Buscar ruta, pueblo o ciclista"/></label><div class="rv-menu-list" id="archive-list"></div></div>
+<div class="rv-menu" id="rv-menu" role="dialog" aria-label="Rutas">
+<div class="rv-menu-top"><div class="rv-tabs" role="tablist" aria-label="Vista"><button type="button" role="tab" id="rv-tab-list" aria-controls="rv-pane-list" aria-selected="true">Lista</button><button type="button" role="tab" id="rv-tab-cal" aria-controls="rv-pane-cal" aria-selected="false">Calendario</button></div><span class="rv-count" id="archive-counter"></span></div>
+<div class="rv-pane" id="rv-pane-list" role="tabpanel" aria-labelledby="rv-tab-list"><label class="rv-menu-field"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="rv-q" type="text" inputmode="search" enterkeyhint="go" placeholder="Buscar ruta, pueblo o ciclista" autocomplete="off" aria-label="Buscar ruta, pueblo o ciclista"/></label><div class="rv-menu-list" id="archive-list" role="listbox" aria-label="Todas las rutas"></div></div>
+<div class="rv-pane rv-pane-cal" id="rv-pane-cal" role="tabpanel" aria-labelledby="rv-tab-cal" hidden><div class="rv-cal-head"><button type="button" id="rv-cal-prev" aria-label="Mes anterior"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button><b id="rv-cal-month" aria-live="polite"></b><button type="button" id="rv-cal-next" aria-label="Mes siguiente"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button></div><div class="rv-cal-week" aria-hidden="true"><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span></div><div class="rv-cal-grid" id="rv-cal-grid"></div><div class="rv-cal-day" id="rv-cal-day"></div><div class="rv-cal-foot" id="rv-cal-foot"></div></div>
+</div>
 </div></div><div class="import-toast" id="import-toast" role="status"></div>
 <script>/* v0.24 — route data lives in data/routes.json (generated by the GPX/provider import pipeline) */
 /* v0.33 — basemap: CARTO Dark Matter when a CARTO basemaps key is set (CARTO requires one since Aug 2026;
@@ -695,37 +703,29 @@ function renderRecent(){
 /* v0.36 — route viewer: full-bleed map, floating dock (prev · route · next · search · list · close) */
 const overlay=document.getElementById('archive-overlay');const shell=document.getElementById('rv-shell');
 const rvOrdered=()=>[...routes].sort((a,b)=>sortKey(b).localeCompare(sortKey(a)));
-function openArchive(id,{list=false}={}){lastFocus=document.activeElement;activeRouteId=id||rvOrdered()[0]?.id||null;renderArchive();overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');requestAnimationFrame(()=>{(list?document.getElementById('rv-menu-btn'):document.getElementById('close-archive')).focus();if(list)openRvMenu()})}
-function closeArchive(){closeRvMenu();closeRvCal();overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');if(mapInstance){mapInstance.remove();mapInstance=null}lastFocus?.focus()}
+function openArchive(id,{list=false}={}){lastFocus=document.activeElement;activeRouteId=id||rvOrdered()[0]?.id||null;renderArchive();overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');requestAnimationFrame(()=>{(list?document.getElementById('rv-menu-btn'):document.getElementById('close-archive')).focus();if(list)openRvMenu({tab:'list'})})}
+function closeArchive(){closeRvMenu();overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');if(mapInstance){mapInstance.remove();mapInstance=null}lastFocus?.focus()}
 document.getElementById('open-archive').addEventListener('click',()=>openArchive(null,{list:true}));document.getElementById('close-archive').addEventListener('click',closeArchive);
 function rvGo(step){const list=rvOrdered(),k=list.findIndex(r=>r.id===activeRouteId)+step;if(k<0||k>=list.length)return;rvShow(list[k].id)}
 function rvShow(id){const c=document.getElementById('archive-detail');c.classList.add('rv-leaving');setTimeout(()=>{activeRouteId=id;renderArchive();c.classList.remove('rv-leaving');shell.scrollTo({top:0});c.scrollTo({top:0})},170)}
-/* Route list dropdown with search */
+/* Routes panel: one entry point with two views, a searchable list and a calendar of ride days */
 const rvMenu=document.getElementById('rv-menu'),rvMenuBtn=document.getElementById('rv-menu-btn'),rvQ=document.getElementById('rv-q');
-const fold=v=>String(v||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
-function rvItem(r){return `<button type="button" class="rv-menu-item ${r.id===activeRouteId?'active':''}" role="option" aria-selected="${r.id===activeRouteId}" data-pick="${escapeHtml(r.id)}"><span class="d">${escapeHtml(formatCardDate(r.date).replace(/ \d+$/,''))}<br>${escapeHtml(r.date.slice(0,4))}</span><span class="t">${escapeHtml(r.title)}</span><span class="k">${fmtKm(r.distance==null?null:Math.round(r.distance*10)/10)} km</span></button>`}
-function rvMatches(){const q=fold(rvQ.value.trim());return rvOrdered().filter(r=>!q||fold([r.title,r.locationLabel,r.participants.map(riderName).join(' '),formatDate(r.date),new Intl.DateTimeFormat('es-ES',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(r.date+'T12:00:00Z'))].join(' ')).includes(q))}
-function renderRvMenu(){const list=document.getElementById('archive-list'),hits=rvMatches();list.innerHTML=hits.length?hits.map(rvItem).join(''):'<p class="rv-none">No hay rutas con ese nombre.</p>';list.querySelectorAll('[data-pick]').forEach(b=>b.addEventListener('click',()=>rvPick(b.dataset.pick)))}
-function rvPick(id){closeRvMenu();if(id!==activeRouteId)rvShow(id)}
-function openRvMenu({focus=false}={}){closeRvCal();rvQ.value='';renderRvMenu();rvMenu.classList.add('open');rvMenuBtn.setAttribute('aria-expanded','true');document.getElementById('archive-list').querySelector('.active')?.scrollIntoView({block:'nearest'});if(focus)setTimeout(()=>rvQ.focus(),60)}
-function closeRvMenu(){const had=rvMenu.contains(document.activeElement);rvMenu.classList.remove('open');rvMenuBtn.setAttribute('aria-expanded','false');if(had&&overlay.classList.contains('open'))rvMenuBtn.focus({preventScroll:true})}
-const toggleRvMenu=e=>{e.stopPropagation();rvMenu.classList.contains('open')?closeRvMenu():openRvMenu({focus:matchMedia('(hover:hover) and (pointer:fine)').matches})};
-rvMenuBtn.addEventListener('click',toggleRvMenu);document.getElementById('rv-current').addEventListener('click',toggleRvMenu);
-rvQ.addEventListener('input',renderRvMenu);
-rvQ.addEventListener('keydown',e=>{if(e.key==='Enter'){const first=rvMatches()[0];if(first){e.preventDefault();rvPick(first.id)}}});
-document.addEventListener('click',e=>{if(rvMenu.classList.contains('open')&&!rvMenu.contains(e.target)&&!rvMenuBtn.contains(e.target)&&!document.getElementById('rv-current').contains(e.target))closeRvMenu()});
-/* Calendar: month grid where days with a ride are clickable */
-const rvCal=document.getElementById('rv-cal'),rvCalBtn=document.getElementById('rv-cal-btn');let rvCalMonth=null;
+let rvTab='list',rvCalMonth=null;
+const fold=v=>String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 const monthKey=d=>d.slice(0,7);
+function rvItem(r){return `<button type="button" class="rv-menu-item ${r.id===activeRouteId?'active':''}" role="option" aria-selected="${r.id===activeRouteId}" data-pick="${escapeHtml(r.id)}"><span class="d">${escapeHtml(formatCardDate(r.date).replace(/ \d+$/,''))}<br>${escapeHtml(r.date.slice(0,4))}</span><span class="t">${escapeHtml(r.title)}</span><span class="k">${fmtKm(r.distance==null?null:Math.round(r.distance*10)/10)} km</span></button>`}
+function bindPicks(root){root.querySelectorAll('[data-pick]').forEach(b=>b.addEventListener('click',()=>rvPick(b.dataset.pick)))}
+function rvPick(id){closeRvMenu();if(id!==activeRouteId)rvShow(id)}
+function rvMatches(){const q=fold(rvQ.value.trim());return rvOrdered().filter(r=>!q||fold([r.title,r.locationLabel,r.participants.map(riderName).join(' '),formatDate(r.date),new Intl.DateTimeFormat('es-ES',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(r.date+'T12:00:00Z'))].join(' ')).includes(q))}
+function renderRvList(){const list=document.getElementById('archive-list'),hits=rvMatches();list.innerHTML=hits.length?hits.map(rvItem).join(''):'<p class="rv-none">No hay rutas con ese nombre.</p>';bindPicks(list)}
 function rvByDate(){const m=new Map();for(const r of rvOrdered()){if(!m.has(r.date))m.set(r.date,[]);m.get(r.date).push(r)}return m}
-function rvMonthBounds(){const ds=rvOrdered().map(r=>monthKey(r.date)).sort();return[ds[0],ds[ds.length-1]]}
-function shiftMonth(key,n){const[y,m]=key.split('-').map(Number),d=new Date(Date.UTC(y,m-1+n,1));return d.toISOString().slice(0,7)}
+function shiftMonth(key,n){const[y,m]=key.split('-').map(Number);return new Date(Date.UTC(y,m-1+n,1)).toISOString().slice(0,7)}
 function renderRvCal(){
- const byDate=rvByDate(),[minM,maxM]=rvMonthBounds(),[y,m]=rvCalMonth.split('-').map(Number);
+ const byDate=rvByDate(),months=rvOrdered().map(r=>monthKey(r.date)).sort(),[y,m]=rvCalMonth.split('-').map(Number);
  const first=new Date(Date.UTC(y,m-1,1)),lead=(first.getUTCDay()+6)%7,days=new Date(Date.UTC(y,m,0)).getUTCDate();
  const monthName=new Intl.DateTimeFormat('es-ES',{month:'long',timeZone:'UTC'}).format(first);
  document.getElementById('rv-cal-month').textContent=new Intl.DateTimeFormat('es-ES',{month:'long',year:'numeric',timeZone:'UTC'}).format(first).replace(/^./,c=>c.toUpperCase());
- document.getElementById('rv-cal-prev').disabled=!minM||rvCalMonth<=minM;document.getElementById('rv-cal-next').disabled=!maxM||rvCalMonth>=maxM;
+ document.getElementById('rv-cal-prev').disabled=!months.length||rvCalMonth<=months[0];document.getElementById('rv-cal-next').disabled=!months.length||rvCalMonth>=months[months.length-1];
  let cells='<span></span>'.repeat(lead),count=0;
  for(let d=1;d<=days;d++){const key=`${rvCalMonth}-${String(d).padStart(2,'0')}`,rs=byDate.get(key);
   if(rs){count+=rs.length;const active=rs.some(r=>r.id===activeRouteId);cells+=`<button type="button" class="has-ride${active?' active':''}" data-day="${key}" aria-label="${d} de ${monthName}: ${escapeHtml(rs.map(r=>r.title).join(', '))}"${active?' aria-current="date"':''}>${d}${rs.length>1?`<i>${rs.length}</i>`:''}</button>`}
@@ -735,33 +735,38 @@ function renderRvCal(){
  document.getElementById('rv-cal-day').innerHTML='';
  document.getElementById('rv-cal-foot').textContent=count?`${count} ${count===1?'salida':'salidas'} en ${monthName}`:`Sin salidas en ${monthName}`;
 }
-function rvCalPickDay(key){const rs=rvByDate().get(key)||[];if(rs.length===1){closeRvCal();if(rs[0].id!==activeRouteId)rvShow(rs[0].id);return}
- const box=document.getElementById('rv-cal-day');box.innerHTML=rs.map(rvItem).join('');box.querySelectorAll('[data-pick]').forEach(b=>b.addEventListener('click',()=>{closeRvCal();if(b.dataset.pick!==activeRouteId)rvShow(b.dataset.pick)}))}
-function openRvCal(){closeRvMenu();const cur=rvOrdered().find(r=>r.id===activeRouteId)||rvOrdered()[0];if(!cur)return;rvCalMonth=monthKey(cur.date);renderRvCal();rvCal.classList.add('open');rvCalBtn.setAttribute('aria-expanded','true')}
-function closeRvCal(){const had=rvCal.contains(document.activeElement);rvCal.classList.remove('open');rvCalBtn.setAttribute('aria-expanded','false');if(had&&overlay.classList.contains('open'))rvCalBtn.focus({preventScroll:true})}
-rvCalBtn.addEventListener('click',e=>{e.stopPropagation();rvCal.classList.contains('open')?closeRvCal():openRvCal()});
+function rvCalPickDay(key){const rs=rvByDate().get(key)||[];if(rs.length===1)return rvPick(rs[0].id);const box=document.getElementById('rv-cal-day');box.innerHTML=rs.map(rvItem).join('');bindPicks(box)}
+function setRvTab(tab){rvTab=tab;const isList=tab==='list';
+ document.getElementById('rv-tab-list').setAttribute('aria-selected',isList);document.getElementById('rv-tab-cal').setAttribute('aria-selected',!isList);
+ document.getElementById('rv-pane-list').hidden=!isList;document.getElementById('rv-pane-cal').hidden=isList;
+ if(isList){renderRvList();document.getElementById('archive-list').querySelector('.active')?.scrollIntoView({block:'nearest'})}
+ else{const cur=rvOrdered().find(r=>r.id===activeRouteId)||rvOrdered()[0];if(cur&&!rvCalMonth)rvCalMonth=monthKey(cur.date);if(rvCalMonth)renderRvCal()}}
+function openRvMenu({focus=false,tab=rvTab}={}){rvQ.value='';rvCalMonth=null;rvMenu.classList.add('open');rvMenuBtn.setAttribute('aria-expanded','true');setRvTab(tab);if(focus&&tab==='list')setTimeout(()=>rvQ.focus(),60)}
+function closeRvMenu(){const had=rvMenu.contains(document.activeElement);rvMenu.classList.remove('open');rvMenuBtn.setAttribute('aria-expanded','false');if(had&&overlay.classList.contains('open'))rvMenuBtn.focus({preventScroll:true})}
+rvMenuBtn.addEventListener('click',e=>{e.stopPropagation();rvMenu.classList.contains('open')?closeRvMenu():openRvMenu()});
+document.getElementById('rv-tab-list').addEventListener('click',()=>setRvTab('list'));document.getElementById('rv-tab-cal').addEventListener('click',()=>setRvTab('cal'));
+document.querySelector('.rv-tabs').addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();e.stopPropagation();const next=rvTab==='list'?'cal':'list';setRvTab(next);document.getElementById(next==='list'?'rv-tab-list':'rv-tab-cal').focus()}});
+rvQ.addEventListener('input',renderRvList);
+rvQ.addEventListener('keydown',e=>{if(e.key==='Enter'){const first=rvMatches()[0];if(first){e.preventDefault();rvPick(first.id)}}});
 document.getElementById('rv-cal-prev').addEventListener('click',()=>{rvCalMonth=shiftMonth(rvCalMonth,-1);renderRvCal()});
 document.getElementById('rv-cal-next').addEventListener('click',()=>{rvCalMonth=shiftMonth(rvCalMonth,1);renderRvCal()});
-document.addEventListener('click',e=>{if(rvCal.classList.contains('open')&&!rvCal.contains(e.target)&&!rvCalBtn.contains(e.target))closeRvCal()});
+document.addEventListener('click',e=>{if(rvMenu.classList.contains('open')&&!rvMenu.contains(e.target)&&!rvMenuBtn.contains(e.target))closeRvMenu()});
 /* Keyboard: Esc closes the innermost layer, arrows change route, "/" searches, Tab stays inside */
 document.addEventListener('keydown',e=>{
  const open=overlay.classList.contains('open');
- if(e.key==='Escape'){if(!open){clearTeam();return}if(rvMenu.classList.contains('open'))closeRvMenu();else if(rvCal.classList.contains('open'))closeRvCal();else closeArchive();return}
+ if(e.key==='Escape'){if(!open){clearTeam();return}if(rvMenu.classList.contains('open'))closeRvMenu();else closeArchive();return}
  if(!open)return;
  const typing=document.activeElement===rvQ;
- if(!typing&&e.key==='ArrowLeft'){rvGo(-1)}else if(!typing&&e.key==='ArrowRight'){rvGo(1)}else if(!typing&&e.key==='/'){e.preventDefault();openRvMenu({focus:true})}
- if(e.key==='Tab'){const focusable=[...shell.querySelectorAll('button:not([disabled]),a[href],input:not([disabled])')].filter(el=>el.offsetParent!==null&&getComputedStyle(el).visibility!=='hidden'&&!el.closest('.rv-menu:not(.open),.rv-cal:not(.open)'));if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
+ if(!typing&&e.key==='ArrowLeft'){rvGo(-1)}else if(!typing&&e.key==='ArrowRight'){rvGo(1)}else if(!typing&&e.key==='/'){e.preventDefault();openRvMenu({focus:true,tab:'list'})}
+ if(e.key==='Tab'){const focusable=[...shell.querySelectorAll('button:not([disabled]),a[href],input:not([disabled])')].filter(el=>el.offsetParent!==null&&getComputedStyle(el).visibility!=='hidden'&&!el.closest('.rv-menu:not(.open),[hidden]'));if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
 });
 /* Swipe on the text (not the map, which pans) to change route on phones */
 (()=>{let sx=null,sy=null;const c=document.getElementById('archive-detail');c.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});c.addEventListener('touchend',e=>{if(sx==null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.5)rvGo(dx<0?1:-1);sx=null},{passive:true})})();
 function renderArchive(){
  const list=rvOrdered();if(!activeRouteId&&list[0])activeRouteId=list[0].id;
  const k=list.findIndex(r=>r.id===activeRouteId),r=list[k];
- document.getElementById('rv-title').textContent=r?r.title:(routesState==='loading'?'Cargando…':'Rutas');
- document.getElementById('rv-pos').textContent=r?`${k+1} de ${list.length} · ${formatCardDate(r.date).replace(/ \d+$/,'').toLowerCase()}`:'';
- document.getElementById('archive-counter').textContent=list.length;
- if(rvMenu.classList.contains('open'))renderRvMenu();
- if(rvCal.classList.contains('open')&&r){rvCalMonth=monthKey(r.date);renderRvCal()}
+ document.getElementById('archive-counter').textContent=`${list.length} ${list.length===1?'ruta':'rutas'}`;
+ if(rvMenu.classList.contains('open')){if(r)rvCalMonth=monthKey(r.date);setRvTab(rvTab)}
  renderDetail(r);
 }
 function rvProfile(r){
