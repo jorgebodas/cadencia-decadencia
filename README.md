@@ -37,6 +37,13 @@ Garmin's Connect Developer Program is business-only and not accepting applicatio
 
 The adapter is covered by mocked tests but has not yet been run against the live API.
 
+## Maps
+
+Cards and route maps use CARTO Dark Matter (OpenStreetMap data). CARTO requires a free basemaps key
+(carto.com/basemaps/apikey); it is a public, browser-side key set as `CARTO_KEY` in `index.html`.
+If the key stops working, set `CARTO_KEY=''` to fall back to the standard OpenStreetMap tiles, or
+open the site with `?mapa=osm`.
+
 ## Development
 
 ```

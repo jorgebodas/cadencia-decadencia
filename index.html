@@ -464,7 +464,7 @@ a.scroll-link:hover,a.scroll-link:focus-visible{color:var(--acid)!important}
 /* v0.33 — basemap: CARTO Dark Matter when a CARTO basemaps key is set (CARTO requires one since Aug 2026;
    it is a public, browser-side key: get it free at carto.com/basemaps/apikey). Without a key, or with
    ?mapa=osm, the OpenStreetMap standard style is used so the map never shows a watermark. */
-const CARTO_KEY='';
+const CARTO_KEY='cb1_4mgd_1_fce905e396f871e304b436f6';
 const MAP_STYLE=(()=>{try{const q=new URLSearchParams(location.search).get('mapa');if(q==='osm')return 'osm';if(q==='dark')return 'dark'}catch{}return CARTO_KEY?'dark':'osm'})();
 const BASEMAP=MAP_STYLE==='dark'
  ?{tile:(z,x,y)=>`https://basemaps.cartocdn.com/rastertiles/dark_all/${z}/${x}/${y}.png?key=${CARTO_KEY}`,leaflet:`https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png?key=${CARTO_KEY}`,subdomains:'',maxZoom:20,credit:'© OpenStreetMap · © CARTO',line:'#cefb11'}
