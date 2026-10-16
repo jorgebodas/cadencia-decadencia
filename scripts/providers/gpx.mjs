@@ -18,7 +18,8 @@ export function gpxToRawActivity(text, { rider, fileName }) {
     rider,
     source: 'gpx',
     source_label: label ? `GPX · ${label}` : 'GPX',
-    source_activity_id: null,
+    // Garmin Connect names exports "activity_<id>.gpx"; keeping the id catches re-exports.
+    source_activity_id: label === 'Garmin' ? path.basename(fileName).match(/activity_(\d{6,})/)?.[1] ?? null : null,
     url: null,
     device: gpx.creator ? gpx.creator.slice(0, 60) : null,
     name: gpx.name ? gpx.name.slice(0, 80) : null,

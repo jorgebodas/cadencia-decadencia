@@ -92,3 +92,9 @@ test('non-cycling activities and unknown riders are rejected', () => {
   const raw2 = gpxToRawActivity(toGpx(loop({ km: 5 })), { rider: 'stranger', fileName: 'r.gpx' });
   assert.throws(() => normalizeActivity(raw2, { riders }), /Unknown rider/);
 });
+
+test('Garmin Connect export file name provides the source activity id', () => {
+  const raw = gpxToRawActivity(toGpx(loop({ km: 5 })), { rider: 'jorge', fileName: 'imports/inbox/jorge/activity_24732819976.gpx' });
+  assert.equal(raw.source_activity_id, '24732819976');
+  assert.equal(gpxToRawActivity(toGpx(loop({ km: 5 }), { creator: 'StravaGPX' }), { rider: 'jorge', fileName: 'activity_24732819976.gpx' }).source_activity_id, null);
+});
