@@ -450,6 +450,9 @@ a.scroll-link:hover,a.scroll-link:focus-visible{color:var(--acid)!important}
 .map-dark .archive-list-thumb{background:#262626!important}
 .map-dark .map-shell,.map-dark .map-shell .leaflet-container{background:#262626}
 .map-dark .card-track path{filter:drop-shadow(0 0 4px rgba(206,251,17,.35))}
+
+/* v0.34 — Dark Matter legibility: lift the map so streets and town names read clearly */
+.map-dark .map-tile,.map-dark .map-shell .leaflet-tile-pane{filter:brightness(1.55) contrast(1.08)}
 </style></head><body>
 <header class="site-header"><button aria-controls="mobile-nav" aria-expanded="false" aria-label="Abrir menú de navegación" class="mobile-menu-trigger" id="mobile-menu-trigger" type="button"><span>MENÚ</span><svg aria-hidden="true" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="15"><path d="m5 9 7 7 7-7"></path></svg></button><a aria-label="Cadencia y Decadencia — inicio" class="wordmark" href="#inicio">CADENCIA Y DECADENCIA</a><nav aria-label="Navegación principal" class="site-nav"><a href="#historia">NOSOTROS</a><a href="#equipo">LA BANDA</a><a href="#rutas">RUTAS</a><a href="#reto">PRÓXIMO RETO</a></nav><nav aria-label="Navegación móvil" class="mobile-nav" id="mobile-nav" inert=""><a href="#historia">NOSOTROS</a><a href="#equipo">LA BANDA</a><a href="#rutas">RUTAS</a><a href="#reto">PRÓXIMO RETO</a></nav></header>
 <main><section aria-label="Presentación" class="hero" id="inicio"><div class="hero-content"><div class="hero-intro"><span class="hero-location">RIVAS · MADRID</span><p class="hero-copy"><strong>Rutas, kilómetros y buena compañía.</strong><br/>Salimos desde Rivas con muchas ganas de dar pedales, descubrir caminos nuevos y pasar una buena mañana juntos. Siempre volvemos con las piernas cansadas, alguna historia nueva y la sensación de que el próximo finde repetimos.</p><a class="scroll-link mobile-explore" href="#historia">EXPLORAR <span class="scroll-circle"><svg aria-hidden="true" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.85" viewbox="0 0 24 24" width="17"><path d="M12 4v16m-7-7 7 7 7-7"></path></svg></span></a></div></div><div class="hero-bottom"><a class="scroll-link" href="#historia">EXPLORAR <span class="scroll-circle"><svg aria-hidden="true" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.85" viewbox="0 0 24 24" width="17"><path d="M12 4v16m-7-7 7 7 7-7"></path></svg></span></a></div></section>
@@ -466,8 +469,12 @@ a.scroll-link:hover,a.scroll-link:focus-visible{color:var(--acid)!important}
    ?mapa=osm, the OpenStreetMap standard style is used so the map never shows a watermark. */
 const CARTO_KEY='cb1_4mgd_1_fce905e396f871e304b436f6';
 const MAP_STYLE=(()=>{try{const q=new URLSearchParams(location.search).get('mapa');if(q==='osm')return 'osm';if(q==='dark')return 'dark'}catch{}return CARTO_KEY?'dark':'osm'})();
+/* Double-resolution tiles on retina screens keep street and town names sharp; any @2x tile that fails
+   falls back to the standard one (see tileFallback and the Leaflet tileerror handler). */
+const RETINA=(window.devicePixelRatio||1)>1.4?'@2x':'';
+function tileFallback(img){if(img.src.includes('@2x.')){img.src=img.src.replace('@2x.','.')}else{img.style.display='none'}}
 const BASEMAP=MAP_STYLE==='dark'
- ?{tile:(z,x,y)=>`https://basemaps.cartocdn.com/rastertiles/dark_all/${z}/${x}/${y}.png?key=${CARTO_KEY}`,leaflet:`https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png?key=${CARTO_KEY}`,subdomains:'',maxZoom:20,credit:'© OpenStreetMap · © CARTO',line:'#cefb11'}
+ ?{tile:(z,x,y)=>`https://basemaps.cartocdn.com/rastertiles/dark_all/${z}/${x}/${y}${RETINA}.png?key=${CARTO_KEY}`,leaflet:`https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}${RETINA}.png?key=${CARTO_KEY}`,subdomains:'',maxZoom:20,credit:'© OpenStreetMap · © CARTO',line:'#cefb11'}
  :{tile:(z,x,y)=>`https://tile.openstreetmap.org/${z}/${x}/${y}.png`,leaflet:'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',subdomains:'abc',maxZoom:18,credit:'© OpenStreetMap',line:'#d9ef78'};
 if(MAP_STYLE==='dark')document.documentElement.classList.add('map-dark');
 const ROUTES_URL='data/routes.json',RIDERS_URL='data/riders.json',ROUTE_TZ='Europe/Madrid';
@@ -525,7 +532,7 @@ function tileMapMarkup(center,opts={}){
  for(let x=Math.floor(xx)-2;x<=Math.floor(xx)+2;x++)for(let y=Math.floor(yy)-2;y<=Math.floor(yy)+2;y++){
   if(y<0||y>=n)continue;
   const dx=Math.round((x-xx)*256),dy=Math.round((y-yy)*256);
-  tiles+=`<img class="map-tile" src="${BASEMAP.tile(z,(x+n)%n,y)}" alt="" loading="lazy" decoding="async" style="left:calc(50% + ${dx}px);top:calc(${top} + ${dy}px)" onerror="this.style.display='none'">`;
+  tiles+=`<img class="map-tile" src="${BASEMAP.tile(z,(x+n)%n,y)}" alt="" loading="lazy" decoding="async" style="left:calc(50% + ${dx}px);top:calc(${top} + ${dy}px)" onerror="tileFallback(this)">`;
  }
  return tiles;
 }
@@ -624,7 +631,7 @@ function renderInteractiveMap(box,{points,center},info,routeId){
   if(mapInstance){mapInstance.remove();mapInstance=null}
   box.innerHTML='<div class="leaflet-host" style="height:100%;width:100%"></div><div class="map-note">'+info+'</div>';
   const map=L.map(box.firstChild,{zoomControl:false,attributionControl:false,scrollWheelZoom:false,zoomSnap:.5});mapInstance=map;
-  L.tileLayer(BASEMAP.leaflet,{maxZoom:BASEMAP.maxZoom,subdomains:BASEMAP.subdomains}).addTo(map);
+  L.tileLayer(BASEMAP.leaflet,{maxZoom:BASEMAP.maxZoom,subdomains:BASEMAP.subdomains}).on('tileerror',e=>{if(e.tile.src.includes('@2x.'))e.tile.src=e.tile.src.replace('@2x.','.')}).addTo(map);
   let bounds=null;
   if(points){const line=L.polyline(points,{color:BASEMAP.line,weight:5,opacity:1}).addTo(map);bounds=line.getBounds();
    L.circleMarker(points[0],{radius:6,color:'#fff',weight:3,fillColor:'#27382a',fillOpacity:1}).addTo(map).bindTooltip('Inicio');
