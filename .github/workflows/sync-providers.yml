@@ -1,0 +1,67 @@
+name: Sync providers
+
+# EXPERIMENTAL automatic sync from intervals.icu (which itself syncs from Garmin Connect, Wahoo,
+# Coros, Suunto, Polar). Off until you set the repository variable INTERVALS_SYNC_ENABLED=true and
+# the secret INTERVALS_ACCOUNTS — see README.md ("Automatic sync").
+on:
+  schedule:
+    - cron: '23 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      days:
+        description: 'How many days back to look'
+        required: false
+        default: '14'
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: route-database
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: vars.INTERVALS_SYNC_ENABLED == 'true' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Fetch new activities
+        id: sync
+        env:
+          INTERVALS_ACCOUNTS: ${{ secrets.INTERVALS_ACCOUNTS }}
+          SYNC_DAYS: ${{ inputs.days || '14' }}
+        run: node scripts/sync.mjs
+
+      - name: Validate route database
+        run: node scripts/validate.mjs
+
+      - name: Run tests
+        run: npm test
+
+      - name: Commit and push
+        id: commit
+        run: bash scripts/commit-and-push.sh "Sync routes from connected providers"
+
+      - name: Request GitHub Pages build
+        if: steps.commit.outputs.pushed == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -fsS -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages/builds"
+
+      - name: Report sync errors
+        if: steps.sync.outputs.errors != '0'
+        run: |
+          echo "::error::${{ steps.sync.outputs.errors }} provider error(s); see the job summary."
+          exit 1

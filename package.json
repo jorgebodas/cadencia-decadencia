@@ -1,0 +1,14 @@
+{
+  "name": "cadencia-decadencia",
+  "private": true,
+  "description": "Cadencia y Decadencia — static site + route import pipeline (no runtime dependencies)",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "import": "node scripts/import.mjs",
+    "sync": "node scripts/sync.mjs",
+    "review": "node scripts/review.mjs",
+    "validate": "node scripts/validate.mjs",
+    "test": "GEOCODE=off node --test tests/*.test.mjs"
+  }
+}

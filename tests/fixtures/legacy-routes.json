@@ -1,0 +1,59 @@
+[
+  {
+    "id": "salud-2026-10-10",
+    "title": "Rivas y alrededores",
+    "date": "2026-10-10",
+    "distance": 52.21,
+    "elevation": 472,
+    "duration_s": 11700,
+    "type": "MTB",
+    "device": "Strava / Komoot · revisado",
+    "avg_speed": 16.1,
+    "avg_hr": 133,
+    "origin": "Salud · Strava",
+    "center": [
+      40.347,
+      -3.519
+    ],
+    "points": null,
+    "locationLabel": "Rivas · Madrid",
+    "sourceNote": "Datos corregidos de la salida del 10 de octubre: 52,21 km y 3h 15m según tu revisión; 472 m+ medidos en Strava (Komoot estimó 607 m). Garmin registró 44,76 km para esa fecha. Se presenta como una única salida, no dos."
+  },
+  {
+    "id": "salud-2026-09-27",
+    "title": "Torres de la Alameda",
+    "date": "2026-09-27",
+    "distance": 37.47,
+    "elevation": 716,
+    "duration_s": 9360,
+    "type": "MTB",
+    "device": "Garmin Instinct 3",
+    "avg_speed": 14.38,
+    "avg_hr": 151,
+    "origin": "Salud · Garmin",
+    "center": [
+      40.403,
+      -3.36
+    ],
+    "points": null,
+    "locationLabel": "Torres de la Alameda · Madrid",
+    "sourceNote": "Garmin del 27/09/2026: 37,47 km, 2h 36m, 716 m de subida, velocidad media 14,38 km/h y FC media 151 lpm. No hay track GPX disponible."
+  },
+  {
+    "id": "salud-2026-09-06",
+    "title": "Salida del 6 de septiembre",
+    "date": "2026-09-06",
+    "distance": 65.71,
+    "elevation": 453,
+    "duration_s": 13233,
+    "type": "MTB",
+    "device": "Garmin",
+    "avg_speed": null,
+    "avg_hr": 135,
+    "origin": "Salud · Garmin",
+    "center": null,
+    "points": null,
+    "locationLabel": null,
+    "sourceNote": "Garmin del 06/09/2026: 65,71 km, 3h 40m 33s, 453 m+ y FC media 135 lpm. El nombre y la localización del recorrido no figuran en las conversaciones recuperadas; el nombre de la tarjeta es editorial."
+  }
+]

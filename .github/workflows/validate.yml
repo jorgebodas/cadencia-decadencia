@@ -1,0 +1,24 @@
+name: Validate
+
+# Checks hand edits (e.g. renaming a route in data/routes.json on github.com) and code changes.
+on:
+  pull_request:
+  push:
+    paths: ['data/**', 'scripts/**', 'tests/**', 'index.html', 'CNAME', 'package.json', '.github/workflows/**']
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate route database, schemas and CNAME
+        run: node scripts/validate.mjs
+      - name: Run tests (GPX parsing, statistics, duplicate and group-ride detection)
+        run: npm test

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://decadencia.es/data/schema/riders.schema.json",
+  "title": "Cadencia y Decadencia riders",
+  "type": "object",
+  "required": ["riders"],
+  "additionalProperties": false,
+  "properties": {
+    "riders": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "devices", "share_heart_rate"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+          "name": { "type": "string", "minLength": 1 },
+          "devices": { "type": "array", "items": { "type": "string" } },
+          "share_heart_rate": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

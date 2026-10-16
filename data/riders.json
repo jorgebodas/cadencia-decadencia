@@ -1,0 +1,11 @@
+{
+  "riders": [
+    { "id": "tochi", "name": "Tochi", "devices": [], "share_heart_rate": false },
+    { "id": "david", "name": "David", "devices": [], "share_heart_rate": false },
+    { "id": "jorge", "name": "Jorge", "devices": ["Garmin Instinct 3 Solar"], "share_heart_rate": false },
+    { "id": "javi", "name": "Javi", "devices": [], "share_heart_rate": false },
+    { "id": "ruth", "name": "Ruth", "devices": [], "share_heart_rate": false },
+    { "id": "fran", "name": "Fran", "devices": [], "share_heart_rate": false },
+    { "id": "nico", "name": "Nico", "devices": [], "share_heart_rate": false }
+  ]
+}

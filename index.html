@@ -356,6 +356,22 @@ a.scroll-link:hover,a.scroll-link:focus-visible{color:var(--acid)!important}
   .site-header .wordmark{font-size:13px!important;max-width:140px!important}
 }
 @media(prefers-reduced-motion:reduce){.mobile-nav,.mobile-menu-trigger svg{transition:none!important}}
+
+/* v0.24 — data-driven routes: GPS preview on cards, loading/error states, riders in detail */
+.card-track{position:absolute;left:50%;top:43%;z-index:3;overflow:visible;pointer-events:none}
+.card-track path{fill:none;stroke:var(--acid);stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 1px 3px rgba(10,16,13,.75))}
+.routes-grid>.route-card-loading{cursor:default;pointer-events:none}
+.route-card-loading .card-neon .metric strong{opacity:.45}
+.routes-status{grid-column:1/-1;margin:0;padding:40px 0;color:var(--muted);font:300 15px/1.5 var(--sans)}
+.routes-retry{margin-left:10px;border:1px solid #aeb0a8;background:transparent;border-radius:99px;padding:9px 15px;font:600 11px var(--sans);transition:background .24s ease,border-color .24s ease}
+.routes-retry:hover,.routes-retry:focus-visible{background:var(--acid);border-color:var(--acid);color:#171b13}
+.detail-riders{border-top:1px solid #dedfd8;padding-top:18px;margin:0 0 6px}
+.detail-riders-title{display:block;color:#7b7f74;font:9px var(--mono);text-transform:uppercase;margin-bottom:12px}
+.detail-riders ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px 28px}
+.detail-riders li strong{display:block;font-size:19px;letter-spacing:-.05em;font-weight:500}
+.detail-riders li span{display:block;color:#71776a;font:10px/1.6 var(--mono);margin-top:3px}
+.detail-riders a{text-decoration:underline;text-underline-offset:3px;color:#393f34}
+@media(max-width:670px){.detail-riders li strong{font-size:17px}.routes-status{padding:20px 0}}
 </style></head><body>
 <header class="site-header"><button aria-controls="mobile-nav" aria-expanded="false" aria-label="Abrir menú de navegación" class="mobile-menu-trigger" id="mobile-menu-trigger" type="button"><span>MENÚ</span><svg aria-hidden="true" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="15"><path d="m5 9 7 7 7-7"></path></svg></button><a aria-label="Cadencia y Decadencia — inicio" class="wordmark" href="#inicio">CADENCIA Y DECADENCIA</a><nav aria-label="Navegación principal" class="site-nav"><a href="#historia">NOSOTROS</a><a href="#equipo">LA BANDA</a><a href="#rutas">RUTAS</a><a href="#reto">PRÓXIMO RETO</a></nav><nav aria-label="Navegación móvil" class="mobile-nav" id="mobile-nav" inert=""><a href="#historia">NOSOTROS</a><a href="#equipo">LA BANDA</a><a href="#rutas">RUTAS</a><a href="#reto">PRÓXIMO RETO</a></nav></header>
 <main><section aria-label="Presentación" class="hero" id="inicio"><div class="hero-content"><div class="hero-intro"><span class="hero-location">RIVAS · MADRID</span><p class="hero-copy"><strong>Rutas, kilómetros y buena compañía.</strong><br/>Salimos desde Rivas con muchas ganas de dar pedales, descubrir caminos nuevos y pasar una buena mañana juntos. Siempre volvemos con las piernas cansadas, alguna historia nueva y la sensación de que el próximo finde repetimos.</p><a class="scroll-link mobile-explore" href="#historia">EXPLORAR <span class="scroll-circle"><svg aria-hidden="true" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.85" viewbox="0 0 24 24" width="17"><path d="M12 4v16m-7-7 7 7 7-7"></path></svg></span></a></div></div><div class="hero-bottom"><a class="scroll-link" href="#historia">EXPLORAR <span class="scroll-circle"><svg aria-hidden="true" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.85" viewbox="0 0 24 24" width="17"><path d="M12 4v16m-7-7 7 7 7-7"></path></svg></span></a></div></section>
@@ -366,10 +382,11 @@ a.scroll-link:hover,a.scroll-link:focus-visible{color:var(--acid)!important}
 <section class="routes" id="rutas"><div class="routes-head"><h2>Nuestras rutas.</h2><button class="archive-button" id="open-archive" type="button">Ver todas las rutas</button></div><div class="routes-grid" id="routes-grid"></div></section>
 </main><footer class="challenge" id="reto"><div class="challenge-inner"><div class="eyebrow" style="color:#a4b58e">PRÓXIMO RETO · 2027</div><h2>Orbea<br/><em>Monegros.</em></h2><a class="challenge-join" href="https://www.orbea.com/es-es/eventos/" rel="noopener noreferrer" target="_blank" title="Consultar los eventos oficiales de Orbea. Inscripción de Monegros 2027 pendiente de confirmar">Únete a nosotros <span aria-hidden="true"><svg aria-hidden="true" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="17"><path d="M5 19 19 5M8 5h11v11"></path></svg></span></a></div><div class="footer-bottom"><span>© CADENCIA / DECADENCIA · 2026</span><span>RIVAS · MADRID</span><a href="#inicio">VOLVER ARRIBA ↑</a></div></footer>
 <div aria-hidden="true" class="archive-overlay" id="archive-overlay"><div aria-label="Archivo de rutas" aria-modal="true" class="archive-shell" role="dialog" tabindex="-1"><div class="archive-top"><div><span class="eyebrow" style="color:#888b7f;display:block;margin-bottom:5px">EL REGISTRO</span><div class="archive-heading">Todas las rutas<span style="color:#a7a99f">.</span></div></div><div class="archive-actions"><button aria-label="Cerrar archivo" class="close-archive" id="close-archive" type="button">×</button></div></div><div class="archive-main"><aside class="archive-sidebar"><div class="archive-sidebar-head mono"><span>RECORRIDOS</span><span id="archive-counter">01 TOTAL</span></div><div class="archive-list" id="archive-list"></div></aside><section aria-live="polite" class="archive-detail" id="archive-detail"></section></div></div></div><div class="import-toast" id="import-toast" role="status"></div>
-<script>const GARMIN_ROUTES=[{"id":"salud-2026-10-10","title":"Rivas y alrededores","date":"2026-10-10","distance":52.21,"elevation":472,"duration_s":11700,"type":"MTB","device":"Strava / Komoot · revisado","avg_speed":16.1,"avg_hr":133,"origin":"Salud · Strava","center":[40.347,-3.519],"points":null,"locationLabel":"Rivas · Madrid","sourceNote":"Datos corregidos de la salida del 10 de octubre: 52,21 km y 3h 15m según tu revisión; 472 m+ medidos en Strava (Komoot estimó 607 m). Garmin registró 44,76 km para esa fecha. Se presenta como una única salida, no dos."},{"id":"salud-2026-09-27","title":"Torres de la Alameda","date":"2026-09-27","distance":37.47,"elevation":716,"duration_s":9360,"type":"MTB","device":"Garmin Instinct 3","avg_speed":14.38,"avg_hr":151,"origin":"Salud · Garmin","center":[40.403,-3.36],"points":null,"locationLabel":"Torres de la Alameda · Madrid","sourceNote":"Garmin del 27/09/2026: 37,47 km, 2h 36m, 716 m de subida, velocidad media 14,38 km/h y FC media 151 lpm. No hay track GPX disponible."},{"id":"salud-2026-09-06","title":"Salida del 6 de septiembre","date":"2026-09-06","distance":65.71,"elevation":453,"duration_s":13233,"type":"MTB","device":"Garmin","avg_speed":null,"avg_hr":135,"origin":"Salud · Garmin","center":null,"points":null,"locationLabel":null,"sourceNote":"Garmin del 06/09/2026: 65,71 km, 3h 40m 33s, 453 m+ y FC media 135 lpm. El nombre y la localización del recorrido no figuran en las conversaciones recuperadas; el nombre de la tarjeta es editorial."}];
+<script>/* v0.24 — route data lives in data/routes.json (generated by the GPX/provider import pipeline) */
+const ROUTES_URL='data/routes.json',RIDERS_URL='data/riders.json',ROUTE_TZ='Europe/Madrid';
 const ROUTE_TYPE='MTB';
 const people={"tochi": ["Tochi", "El CEO de las cuestas.", "No convoca reuniones: convoca rutas. Siempre tiene un plan, una subida más y energía de sobra para convencernos de que hoy toca sufrir un poquito."], "david": ["David", "Fondo infinito. Gadgets también.", "Mientras el resto pregunta cuánto queda, él todavía está calentando. Tiene más kilómetros en las piernas y más equipamiento en la bici que una tienda especializada."], "jorge": ["Jorge", "Experto en posponer la alarma.", "Alguna vez se queda dormido y pierde la salida. Pero cuando aparece, viene con ganas, alguna foto y la firme convicción de que el madrugón merecía la pena."], "javi": ["Javi", "Cero quejas. Máxima técnica.", "Elige la trazada que nadie ve, pasa por donde otros dudan y sigue sumando kilómetros sin protestar. Tanto, que a veces parece que no le cuesta."]};
-let routes=[...GARMIN_ROUTES];let activeRouteId=routes[0]?.id||null;let mapInstance=null;let lastFocus=null;let toastTimer;
+let routes=[];let routesState='loading';let riderNames={};const trackCache=new Map();let activeRouteId=null;let mapInstance=null;let lastFocus=null;let toastTimer;
 const team=document.getElementById('team-gallery');
 const peopleCards=[...team.querySelectorAll('.person')];
 const teamPrev=document.getElementById('team-prev');
@@ -388,49 +405,97 @@ team.addEventListener('scroll',updateTeamArrows,{passive:true});window.addEventL
 requestAnimationFrame(updateTeamArrows);
 function formatDate(s){try{return new Intl.DateTimeFormat('es-ES',{day:'2-digit',month:'short',year:'numeric',timeZone:'UTC'}).format(new Date((s||'2026-01-01')+'T12:00:00Z')).toUpperCase()}catch{return s||'—'}}
 function formatCardDate(s){try{return new Intl.DateTimeFormat('es-ES',{day:'2-digit',month:'short',year:'2-digit',timeZone:'UTC'}).format(new Date(s+'T12:00:00Z')).replace(/\./g,'').toUpperCase()}catch{return s||'—'}}
+function formatClock(iso){try{return iso?new Intl.DateTimeFormat('es-ES',{hour:'2-digit',minute:'2-digit',hourCycle:'h23',timeZone:ROUTE_TZ}).format(new Date(iso)):''}catch{return ''}}
 function fmtKm(n){return n==null?'—':new Intl.NumberFormat('es-ES',{maximumFractionDigits:2}).format(n)}
 function fmtElev(n){return n==null?'—':new Intl.NumberFormat('es-ES',{maximumFractionDigits:0}).format(Math.round(n))}
 function fmtDur(n){if(!n)return '—';const h=Math.floor(n/3600),m=Math.floor(n%3600/60);return h?h+'h '+String(m).padStart(2,'0')+'m':m+' min'}
 function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]))}
-function getRecent(){return [...routes].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,3)}
+function riderName(id){return riderNames[id]||people[id]?.[0]||String(id||'').replace(/^./,c=>c.toUpperCase())}
+function joinNames(ids){const n=ids.map(riderName);return n.length>1?n.slice(0,-1).join(', ')+' y '+n[n.length-1]:n[0]||''}
+function sortKey(r){return (r.date||'')+'T'+(r.start_time?r.start_time.slice(11):'12')}
+/* Map the stored schema onto the shape the existing renderers already use. */
+function toView(r){const primary=(r.activities||[]).find(a=>a.id===r.primary_activity)||(r.activities||[])[0]||{};return{id:r.id,title:r.title,date:r.date,start_time:r.start_time,distance:r.distance_km,elevation:r.elevation_gain_m,duration_s:r.duration_s??r.moving_time_s??r.elapsed_time_s,type:r.type,device:primary.device,avg_speed:r.avg_speed_kmh,avg_hr:r.avg_hr_bpm,origin:primary.source_label,center:Array.isArray(r.map_center)&&r.map_center.length===2?r.map_center:null,track:r.track,preview:Array.isArray(r.preview)&&r.preview.length>1?r.preview:null,points:null,locationLabel:r.start_location?.label||null,sourceNote:r.source_note,participants:r.participants||[],activities:r.activities||[],trackRider:(r.activities||[]).find(a=>a.track===r.track)?.rider||null}}
+async function loadRoutes(){
+ routesState='loading';renderRecent();
+ try{
+  const [res,ridersRes]=await Promise.all([fetch(ROUTES_URL,{cache:'no-cache'}),fetch(RIDERS_URL,{cache:'no-cache'}).catch(()=>null)]);
+  if(!res.ok)throw Error('HTTP '+res.status);
+  const db=await res.json();
+  if(!db||!Array.isArray(db.routes))throw Error('Formato de rutas no válido');
+  try{if(ridersRes&&ridersRes.ok)(await ridersRes.json()).riders.forEach(x=>{riderNames[x.id]=x.name})}catch{}
+  routes=db.routes.filter(r=>r&&r.id&&r.date).map(toView);routesState='ready';
+ }catch(e){console.error('No se pudieron cargar las rutas:',e);routesState='error'}
+ renderRecent();if(overlay.classList.contains('open'))renderArchive();
+}
+function getRecent(){return [...routes].sort((a,b)=>sortKey(b).localeCompare(sortKey(a))).slice(0,3)}
 
+function project(lat,lon,z){const n=256*2**z,rad=lat*Math.PI/180;return[(lon+180)/360*n,(1-Math.log(Math.tan(rad)+1/Math.cos(rad))/Math.PI)/2*n]}
+function fitZoom(pts,w,h){for(let z=15;z>=8;z--){const xy=pts.map(p=>project(p[0],p[1],z)),xs=xy.map(p=>p[0]),ys=xy.map(p=>p[1]);if(Math.max(...xs)-Math.min(...xs)<=w&&Math.max(...ys)-Math.min(...ys)<=h)return z}return 8}
 function tileMapMarkup(center,opts={}){
  if(!center||center.length!==2)return '<div class="map-blank-pattern" aria-hidden="true"></div>';
- const [lat,lon]=center,z=opts.zoom||12,n=2**z,xx=(lon+180)/360*n,rad=lat*Math.PI/180,yy=(1-Math.log(Math.tan(rad)+1/Math.cos(rad))/Math.PI)/2*n;
+ const [lat,lon]=center,z=opts.zoom||12,top=opts.top||'50%',n=2**z,xx=(lon+180)/360*n,rad=lat*Math.PI/180,yy=(1-Math.log(Math.tan(rad)+1/Math.cos(rad))/Math.PI)/2*n;
  let tiles='';
  for(let x=Math.floor(xx)-2;x<=Math.floor(xx)+2;x++)for(let y=Math.floor(yy)-2;y<=Math.floor(yy)+2;y++){
   if(y<0||y>=n)continue;
   const dx=Math.round((x-xx)*256),dy=Math.round((y-yy)*256);
-  tiles+=`<img class="map-tile" src="https://tile.openstreetmap.org/${z}/${(x+n)%n}/${y}.png" alt="" loading="lazy" decoding="async" style="left:calc(50% + ${dx}px);top:calc(50% + ${dy}px)" onerror="this.style.display='none'">`;
+  tiles+=`<img class="map-tile" src="https://tile.openstreetmap.org/${z}/${(x+n)%n}/${y}.png" alt="" loading="lazy" decoding="async" style="left:calc(50% + ${dx}px);top:calc(${top} + ${dy}px)" onerror="this.style.display='none'">`;
  }
  return tiles;
 }
+/* Real GPS preview drawn over the same tiles, in the card's lime accent. */
+function cardTrackMarkup(r){
+ const pts=r.preview,z=fitZoom(pts,250,135),xy=pts.map(p=>project(p[0],p[1],z)),xs=xy.map(p=>p[0]),ys=xy.map(p=>p[1]);
+ const cx=(Math.min(...xs)+Math.max(...xs))/2,cy=(Math.min(...ys)+Math.max(...ys))/2,n=256*2**z;
+ const center=[Math.atan(Math.sinh(Math.PI*(1-2*cy/n)))*180/Math.PI,cx/n*360-180];
+ const d=xy.map((p,i)=>(i?'L':'M')+(p[0]-cx).toFixed(1)+' '+(p[1]-cy).toFixed(1)).join('');
+ return tileMapMarkup(center,{zoom:z,top:'43%'})+`<svg class="card-track" width="1" height="1" aria-hidden="true"><path d="${d}"/></svg>`;
+}
 function recentCard(r,index){
- const center=r.center&&r.center.length===2,hasGPS=r.points?.length>1;
+ const center=r.center&&r.center.length===2,hasGPS=!!r.preview;
+ const crew=r.participants.length?`<br>${escapeHtml(joinNames(r.participants))}`:'';
  return `<button class="route-card" type="button" data-route="${escapeHtml(r.id)}" aria-label="Abrir detalle de ${escapeHtml(r.title)}">
-  <div class="route-bg-map">${tileMapMarkup(r.center)}${center&&!hasGPS?'<div class="map-center-dot"></div>':''}</div>
+  <div class="route-bg-map">${hasGPS?cardTrackMarkup(r):tileMapMarkup(r.center)}${center&&!hasGPS?'<div class="map-center-dot"></div>':''}</div>
   <div class="card-head"><span class="place">${escapeHtml(r.title)}</span><span class="card-date">${formatCardDate(r.date)}</span></div>
-  ${!center?'<div class="map-unavailable">Ubicación del recorrido pendiente</div>':''}${center?'<span class="route-attribution">© OpenStreetMap</span>':''}
+  ${!center&&!hasGPS?'<div class="map-unavailable">Ubicación del recorrido pendiente</div>':''}${center||hasGPS?'<span class="route-attribution">© OpenStreetMap</span>':''}
   <div class="card-neon"><div class="metrics"><span class="metric"><strong>${fmtKm(r.distance)}</strong><small>km</small></span><span class="metric"><strong>${fmtElev(r.elevation)}</strong><small>m de subida</small></span><span class="metric"><strong>${fmtDur(r.duration_s).replace(/ /g,' ')}</strong><small>duración</small></span></div>
-  <div class="card-bottom"><span>${escapeHtml(r.locationLabel||'Localización por confirmar')}</span><span class="cta-circle" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19 19 5M8 5h11v11"/></svg></span></div></div>
+  <div class="card-bottom"><span>${escapeHtml(r.locationLabel||'Localización por confirmar')}${crew}</span><span class="cta-circle" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19 19 5M8 5h11v11"/></svg></span></div></div>
  </button>`;
 }
+function loadingCard(){return `<div class="route-card route-card-loading" aria-hidden="true"><div class="route-bg-map"><div class="map-blank-pattern"></div></div><div class="card-neon"><div class="metrics"><span class="metric"><strong>—</strong><small>km</small></span><span class="metric"><strong>—</strong><small>m de subida</small></span><span class="metric"><strong>—</strong><small>duración</small></span></div><div class="card-bottom"><span>Cargando rutas…</span></div></div></div>`}
 function emptyCard(index){return ''}
-function renderRecent(){const recent=getRecent();document.getElementById('routes-grid').innerHTML=recent.map(recentCard).join('');document.querySelectorAll('[data-route]').forEach(b=>b.addEventListener('click',()=>openArchive(b.dataset.route)))}
-const overlay=document.getElementById('archive-overlay');const shell=overlay.querySelector('.archive-shell');function openArchive(id){lastFocus=document.activeElement;activeRouteId=id||routes[0]?.id||null;renderArchive();overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');requestAnimationFrame(()=>document.getElementById('close-archive').focus())}
+function renderRecent(){
+ const grid=document.getElementById('routes-grid');
+ grid.setAttribute('aria-busy',String(routesState==='loading'));
+ if(routesState==='loading'){grid.innerHTML=loadingCard()+loadingCard()+loadingCard();return}
+ if(routesState==='error'){grid.innerHTML='<p class="routes-status">No hemos podido cargar las rutas ahora mismo. <button type="button" class="routes-retry" id="routes-retry">Reintentar</button></p>';document.getElementById('routes-retry').addEventListener('click',loadRoutes);return}
+ const recent=getRecent();
+ if(!recent.length){grid.innerHTML='<p class="routes-status">Todavía no hay rutas publicadas.</p>';return}
+ grid.innerHTML=recent.map(recentCard).join('');grid.querySelectorAll('[data-route]').forEach(b=>b.addEventListener('click',()=>openArchive(b.dataset.route)))
+}
+const overlay=document.getElementById('archive-overlay');const shell=overlay.querySelector('.archive-shell');function openArchive(id){lastFocus=document.activeElement;activeRouteId=id||getRecent()[0]?.id||null;renderArchive();overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');requestAnimationFrame(()=>document.getElementById('close-archive').focus())}
 function closeArchive(){overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');if(mapInstance){mapInstance.remove();mapInstance=null}lastFocus?.focus()}
 document.getElementById('open-archive').addEventListener('click',()=>openArchive());document.getElementById('close-archive').addEventListener('click',closeArchive);overlay.addEventListener('click',e=>{if(e.target===overlay)closeArchive()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(overlay.classList.contains('open'))closeArchive();else clearTeam()}if(e.key==='Tab'&&overlay.classList.contains('open')){const focusable=[...shell.querySelectorAll('button:not([disabled]),a[href],input:not([disabled]),label[for]')].filter(el=>getComputedStyle(el).visibility!=='hidden');if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
-function renderArchive(){const list=document.getElementById('archive-list');const ordered=[...routes].sort((a,b)=>b.date.localeCompare(a.date));document.getElementById('archive-counter').textContent=String(routes.length).padStart(2,'0')+' TOTAL';list.innerHTML=ordered.map(r=>`<button type="button" class="archive-list-item ${r.id===activeRouteId?'active':''}" data-select="${escapeHtml(r.id)}" aria-pressed="${r.id===activeRouteId}"><span class="archive-list-thumb" style="position:relative;overflow:hidden;background:#445946"><span style="position:absolute;inset:0;display:block;opacity:.95;transform:scale(.5)">${r.center?tileMapMarkup(r.center,{zoom:11}):"◎"}</span></span><span><span class="archive-list-meta">${formatDate(r.date)}</span><span class="archive-list-name" style="display:block">${escapeHtml(r.title)}</span><span class="archive-list-meta">${fmtKm(r.distance)} km · +${fmtElev(r.elevation)} m</span></span></button>`).join('');list.querySelectorAll('[data-select]').forEach(b=>b.addEventListener('click',()=>{activeRouteId=b.dataset.select;renderArchive()}));renderDetail(ordered.find(r=>r.id===activeRouteId)||ordered[0])}
+function renderArchive(){const list=document.getElementById('archive-list');const ordered=[...routes].sort((a,b)=>sortKey(b).localeCompare(sortKey(a)));if(!activeRouteId&&ordered[0])activeRouteId=ordered[0].id;document.getElementById('archive-counter').textContent=String(routes.length).padStart(2,'0')+' TOTAL';list.innerHTML=ordered.map(r=>`<button type="button" class="archive-list-item ${r.id===activeRouteId?'active':''}" data-select="${escapeHtml(r.id)}" aria-pressed="${r.id===activeRouteId}"><span class="archive-list-thumb" style="position:relative;overflow:hidden;background:#445946"><span style="position:absolute;inset:0;display:block;opacity:.95;transform:scale(.5)">${r.center?tileMapMarkup(r.center,{zoom:11}):"◎"}</span></span><span><span class="archive-list-meta">${formatDate(r.date)}</span><span class="archive-list-name" style="display:block">${escapeHtml(r.title)}</span><span class="archive-list-meta">${fmtKm(r.distance)} km · +${fmtElev(r.elevation)} m</span></span></button>`).join('');list.querySelectorAll('[data-select]').forEach(b=>b.addEventListener('click',()=>{activeRouteId=b.dataset.select;renderArchive()}));renderDetail(ordered.find(r=>r.id===activeRouteId)||ordered[0])}
 
+function ridersMarkup(r){
+ const acts=r.activities.filter(a=>a.rider);const ids=[...new Set([...r.participants,...acts.map(a=>a.rider)])];
+ if(!ids.length)return '';
+ const line=a=>escapeHtml([a.distance_km!=null?fmtKm(a.distance_km)+' km':'',a.moving_time_s||a.elapsed_time_s?fmtDur(a.moving_time_s||a.elapsed_time_s):'',a.source_label||''].filter(Boolean).join(' · '))+(a.url?` · <a href="${escapeHtml(a.url)}" target="_blank" rel="noopener noreferrer">Actividad original ↗</a>`:'');
+ const rows=ids.map(id=>{const own=acts.filter(a=>a.rider===id);return `<li><strong>${escapeHtml(riderName(id))}</strong><span>${own.length?own.map(line).join('<br>'):'Sin registro propio'}</span></li>`}).join('');
+ return `<div class="detail-riders"><span class="detail-riders-title">${ids.length>1?ids.length+' ciclistas':'Ciclista'}</span><ul>${rows}</ul></div>`;
+}
+function fetchTrack(path){if(!trackCache.has(path))trackCache.set(path,fetch(path,{cache:'force-cache'}).then(res=>{if(!res.ok)throw Error('HTTP '+res.status);return res.json()}).then(t=>{const pts=(t.points||[]).filter(p=>Number.isFinite(p[0])&&Number.isFinite(p[1])).map(p=>[p[0],p[1]]);if(pts.length<2)throw Error('Track vacío');return pts}).catch(e=>{trackCache.delete(path);throw e}));return trackCache.get(path)}
+function renderReferenceMap(box,r,info){box.innerHTML=`<div class="route-bg-map">${tileMapMarkup(r.center,{zoom:12})}<div class="map-center-dot"></div></div><div class="map-note">${info}</div><span style="position:absolute;top:12px;right:12px;z-index:4;color:#fff;font:500 10px var(--sans);text-shadow:0 1px 8px #000">© OpenStreetMap contributors</span>`}
 function renderDetail(r){
  if(mapInstance){mapInstance.remove();mapInstance=null}
  const detail=document.getElementById('archive-detail');
- if(!r){detail.innerHTML='<p>Archivo vacío.</p>';return}
- const hasGPS=r.points?.length>=2;
- const mapInfo=hasGPS?'<strong>Recorrido GPS original</strong>Trazado del GPX importado.':r.center?'<strong>Mapa de referencia</strong>Se muestra la zona de la salida. El track GPS no está disponible.':'<strong>Ubicación por confirmar</strong>Tenemos las estadísticas, pero no la localización exacta del recorrido.';
+ if(!r){detail.innerHTML=`<p>${routesState==='loading'?'Cargando rutas…':routesState==='error'?'No hemos podido cargar las rutas. Inténtalo de nuevo en unos minutos.':'Archivo vacío.'}</p>`;return}
+ const hasGPS=!!r.track;
+ const recorder=r.trackRider?`Trazado registrado por ${escapeHtml(riderName(r.trackRider))}.`:'Trazado del GPX importado.';
+ const mapInfo=hasGPS?`<strong>Recorrido GPS original</strong>${recorder} Inicio y final recortados por privacidad.`:r.center?'<strong>Mapa de referencia</strong>Se muestra la zona de la salida. El track GPS no está disponible.':'<strong>Ubicación por confirmar</strong>Tenemos las estadísticas, pero no la localización exacta del recorrido.';
  const mapsLink=r.center?`<a href="https://www.openstreetmap.org/#map=12/${r.center[0]}/${r.center[1]}" target="_blank" rel="noopener noreferrer">Abrir zona en OpenStreetMap ↗</a>`:'<span>Localización no registrada</span>';
- const topMeta=[formatDate(r.date), r.type||'MTB', (r.origin||'GPX').replace('Salud · ','')].filter(Boolean).join(' · ');
+ const topMeta=[formatDate(r.date), formatClock(r.start_time), r.type||ROUTE_TYPE, (r.origin||'GPX').replace('Salud · ','')].filter(Boolean).join(' · ');
  const extraStats=[
    `<div class="detail-stat"><strong>${fmtKm(r.distance)} km</strong><span>Distancia</span></div>`,
    `<div class="detail-stat"><strong>+${fmtElev(r.elevation)} m</strong><span>Ascenso</span></div>`,
@@ -442,18 +507,19 @@ function renderDetail(r){
  ].join('');
  detail.innerHTML=`<div class="detail-meta">${escapeHtml(topMeta)}</div><h3 class="detail-title">${escapeHtml(r.title)}</h3>
  <div class="map-shell" id="route-map"></div><div class="map-actions"><span>${hasGPS?'Track GPS disponible':'Mapa de referencia'}</span>${hasGPS?'<span>Cartografía © OpenStreetMap</span>':mapsLink}</div>
- <div class="detail-stats">${extraStats}</div>${r.sourceNote?`<p class="detail-source-note">${escapeHtml(r.sourceNote)}</p>`:''}`;
+ <div class="detail-stats">${extraStats}</div>${ridersMarkup(r)}${r.sourceNote?`<p class="detail-source-note">${escapeHtml(r.sourceNote)}</p>`:''}`;
  const box=document.getElementById('route-map');
- if(hasGPS){renderTrackMap(box,r.points,mapInfo)}
- else if(r.center){box.innerHTML=`<div class="route-bg-map">${tileMapMarkup(r.center,{zoom:12})}<div class="map-center-dot"></div></div><div class="map-note">${mapInfo}</div><span style="position:absolute;top:12px;right:12px;z-index:4;color:#fff;font:500 10px var(--sans);text-shadow:0 1px 8px #000">© OpenStreetMap contributors</span>`}
+ if(hasGPS){
+  box.innerHTML='<div class="map-loading">Cargando recorrido GPS…</div>';
+  fetchTrack(r.track).then(points=>{r.points=points;if(activeRouteId===r.id&&box.isConnected)renderTrackMap(box,points,mapInfo)}).catch(e=>{console.error('Track no disponible:',e);if(!box.isConnected)return;if(r.center)renderReferenceMap(box,r,'<strong>Track no disponible</strong>No hemos podido cargar el trazado GPS. Se muestra la zona de la salida.');else box.innerHTML='<div class="map-loading">Track no disponible</div>'});
+ }
+ else if(r.center){renderReferenceMap(box,r,mapInfo)}
  else{box.innerHTML=`<div class="geo-blank" style="background:repeating-radial-gradient(ellipse at 50% 47%,transparent 0 19px,#cfe9cd21 20px 21px,transparent 22px 42px),linear-gradient(145deg,#6b8672,#354d3f)"><span class="geo-point">◎</span><span class="geo-city">RUTA SIN LOCALIZAR</span></div><div class="map-note">${mapInfo}</div>`}
 }
 function svgTrack(points){const lat=points.map(p=>p[0]),lon=points.map(p=>p[1]);const minLat=Math.min(...lat),maxLat=Math.max(...lat),minLon=Math.min(...lon),maxLon=Math.max(...lon);const dx=Math.max(0.00001,maxLon-minLon),dy=Math.max(0.00001,maxLat-minLat);const scale=Math.min(860/dx,480/dy),px=(930-dx*scale)/2,py=(540-dy*scale)/2;let d=points.map((p,i)=>`${i===0?'M':'L'} ${(px+(p[1]-minLon)*scale).toFixed(1)} ${(py+(maxLat-p[0])*scale).toFixed(1)}`).join(' ');return `<div class="track-fallback"><svg viewBox="0 0 930 540" preserveAspectRatio="xMidYMid meet" aria-label="Trazado GPS importado"><path d="${d}"></path></svg></div>`}
 function renderTrackMap(box,points,info){box.innerHTML=svgTrack(points)+`<div class="map-note">${info}</div>`;const init=()=>{if(!window.L||!box.isConnected)return;try{box.innerHTML='<div id="leaflet-map" style="height:100%;width:100%"></div><div class="map-note">'+info+'</div>';const map=L.map('leaflet-map',{zoomControl:false,attributionControl:false,scrollWheelZoom:false});mapInstance=map;L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(map);let line=L.polyline(points,{color:'#d9ef78',weight:5,opacity:1}).addTo(map);map.fitBounds(line.getBounds(),{padding:[35,35]});L.control.zoom({position:'topright'}).addTo(map);L.control.attribution({position:'bottomright',prefix:false}).addTo(map);setTimeout(()=>map.invalidateSize(),150)}catch(e){box.innerHTML=svgTrack(points)+`<div class="map-note">${info}</div>`}};if(window.L){init();return}if(!document.getElementById('leaflet-style')){const l=document.createElement('link');l.id='leaflet-style';l.rel='stylesheet';l.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';document.head.appendChild(l)}if(!document.getElementById('leaflet-script')){const s=document.createElement('script');s.id='leaflet-script';s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';s.onload=()=>{if(activeRouteId&&box.isConnected)init()};document.head.appendChild(s)}else document.getElementById('leaflet-script').addEventListener('load',init,{once:true})}
-function haversine(a,b){const R=6371,rad=n=>n*Math.PI/180,dlat=rad(b[0]-a[0]),dlon=rad(b[1]-a[1]);return 2*R*Math.asin(Math.sqrt(Math.sin(dlat/2)**2+Math.cos(rad(a[0]))*Math.cos(rad(b[0]))*Math.sin(dlon/2)**2))}
-function parseGPX(text,fileName){const xml=new DOMParser().parseFromString(text,'application/xml');if(xml.querySelector('parsererror'))throw Error('GPX no válido');const ptEls=[...xml.querySelectorAll('trkpt')];if(ptEls.length<2)throw Error('El archivo no tiene puntos GPS de ruta');let latlon=[],ascent=0,dist=0,prevEle=null,times=[];for(const p of ptEls){const lat=Number(p.getAttribute('lat')),lon=Number(p.getAttribute('lon'));if(!Number.isFinite(lat)||!Number.isFinite(lon))continue;const pos=[lat,lon];if(latlon.length)dist+=haversine(latlon[latlon.length-1],pos);latlon.push(pos);const e=p.querySelector('ele');const ele=e?Number(e.textContent):NaN;if(Number.isFinite(ele)){if(prevEle!==null&&ele>prevEle)ascent+=ele-prevEle;prevEle=ele}const t=p.querySelector('time');if(t&&t.textContent&&Number.isFinite(Date.parse(t.textContent)))times.push(Date.parse(t.textContent))}if(latlon.length<2)throw Error('No se encontraron coordenadas');const rawName=xml.querySelector('trk > name')?.textContent||fileName.replace(/\.gpx$/i,'');const date=times.length?new Date(times[0]).toISOString().slice(0,10):new Date().toISOString().slice(0,10);return{id:'gpx-'+Date.now()+'-'+Math.random().toString(36).slice(2,6),title:rawName.slice(0,60),date,distance:Math.round(dist*100)/100,elevation:Math.round(ascent),duration_s:times.length>1?Math.round((times[times.length-1]-times[0])/1000):null,type:'MTB',device:'Archivo GPS',origin:'GPX',points:latlon.length>1500?latlon.filter((_,i)=>i%Math.ceil(latlon.length/1500)===0):latlon,center:latlon[0]}}
 function toast(msg){const t=document.getElementById('import-toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),3500)}
-renderRecent();
+loadRoutes();
 
 /* v0.23 — dropdown with click-outside and Escape */
 (()=>{const trigger=document.getElementById('mobile-menu-trigger');const menu=document.getElementById('mobile-nav');if(!trigger||!menu)return;

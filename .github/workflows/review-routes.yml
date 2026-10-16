@@ -1,0 +1,67 @@
+name: Review routes
+
+# Manual decisions for uncertain group-ride matches (Actions tab -> Review routes -> Run workflow).
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: 'list | merge (route -> into) | split (activity) | dismiss (review) | rename (route -> title)'
+        required: true
+        type: choice
+        options: [list, merge, split, dismiss, rename]
+      target:
+        description: 'Route id (merge/rename), activity id (split) or review id (dismiss)'
+        required: false
+        type: string
+      value:
+        description: 'merge: route id to merge INTO · rename: new title'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: route-database
+  cancel-in-progress: false
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Apply review command
+        # Inputs are passed through the environment, never interpolated into the shell.
+        env:
+          COMMAND: ${{ inputs.command }}
+          TARGET: ${{ inputs.target }}
+          VALUE: ${{ inputs.value }}
+        run: node scripts/review.mjs "$COMMAND" "$TARGET" "$VALUE"
+
+      - name: Validate route database
+        run: node scripts/validate.mjs
+
+      - name: Run tests
+        run: npm test
+
+      - name: Commit and push
+        id: commit
+        if: inputs.command != 'list'
+        run: bash scripts/commit-and-push.sh "Route review (${{ inputs.command }})"
+
+      - name: Request GitHub Pages build
+        if: steps.commit.outputs.pushed == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -fsS -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages/builds"

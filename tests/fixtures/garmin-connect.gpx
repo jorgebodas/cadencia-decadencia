@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic sample in the exact layout Garmin Connect uses for "Export to GPX". -->
+<gpx creator="Garmin Connect" version="1.1"
+  xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/11.xsd"
+  xmlns:ns3="http://www.garmin.com/xmlschemas/TrackPointExtension/v1"
+  xmlns="http://www.topografix.com/GPX/1/1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns2="http://www.garmin.com/xmlschemas/GpxExtensions/v3">
+  <metadata>
+    <link href="connect.garmin.com">
+      <text>Garmin Connect</text>
+    </link>
+    <time>2026-10-18T07:02:11.000Z</time>
+  </metadata>
+  <trk>
+    <name>Rivas-Vaciamadrid Ciclismo de montaña</name>
+    <type>mountain_biking</type>
+    <trkseg>
+      <trkpt lat="40.3512000" lon="-3.5201000">
+        <ele>590.4</ele>
+        <time>2026-10-18T07:02:11.000Z</time>
+        <extensions>
+          <ns3:TrackPointExtension>
+            <ns3:hr>98</ns3:hr>
+            <ns3:cad>0</ns3:cad>
+          </ns3:TrackPointExtension>
+        </extensions>
+      </trkpt>
+      <trkpt lat="40.3514000" lon="-3.5204000"><ele>591.0</ele><time>2026-10-18T07:02:16.000Z</time><extensions><ns3:TrackPointExtension><ns3:hr>101</ns3:hr></ns3:TrackPointExtension></extensions></trkpt>
+      <trkpt lon="-3.5207000" lat="40.3516000"><ele>592.2</ele><time>2026-10-18T07:02:21.000Z</time></trkpt>
+      <trkpt lat="40.3518000" lon="-3.5210000"><ele>593.8</ele><time>2026-10-18T07:02:26.000Z</time></trkpt>
+      <trkpt lat="40.3520000" lon="-3.5213000"><ele>595.1</ele><time>2026-10-18T07:02:31.000Z</time></trkpt>
+    </trkseg>
+    <trkseg>
+      <trkpt lat="40.3530000" lon="-3.5220000"><ele>597.0</ele><time>2026-10-18T07:10:00.000Z</time></trkpt>
+    </trkseg>
+  </trk>
+</gpx>

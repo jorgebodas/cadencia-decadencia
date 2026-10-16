@@ -1,0 +1,60 @@
+name: Import routes
+
+# Drop a GPX into imports/inbox/<rider>/ on main -> this workflow parses it, groups it with
+# other riders' recordings of the same outing, updates data/routes.json and republishes the site.
+on:
+  push:
+    branches: [main]
+    paths: ['imports/inbox/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: route-database
+  cancel-in-progress: false
+
+jobs:
+  import:
+    # Second safety net against commit loops (bot pushes with GITHUB_TOKEN do not trigger runs anyway).
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Import GPX files
+        id: import
+        run: node scripts/import.mjs
+
+      - name: Validate route database
+        run: node scripts/validate.mjs
+
+      - name: Run tests
+        run: npm test
+
+      - name: Commit and push
+        id: commit
+        run: bash scripts/commit-and-push.sh "Import routes from imports/inbox"
+
+      - name: Request GitHub Pages build
+        if: steps.commit.outputs.pushed == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -fsS -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages/builds"
+
+      - name: Report files that could not be imported
+        if: steps.import.outputs.errors != '0'
+        run: |
+          echo "::error::${{ steps.import.outputs.errors }} GPX file(s) failed. They were moved to imports/failed/ with an .error.txt explaining why."
+          exit 1

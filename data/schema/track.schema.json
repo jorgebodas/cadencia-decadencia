@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://decadencia.es/data/schema/track.schema.json",
+  "title": "Published GPS track (privacy-trimmed, simplified)",
+  "type": "object",
+  "required": ["activity", "start_time", "points"],
+  "additionalProperties": false,
+  "properties": {
+    "activity": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "start_time": { "type": ["string", "null"] },
+    "points": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "array",
+        "minItems": 4,
+        "maxItems": 4,
+        "items": { "type": ["number", "null"] }
+      }
+    }
+  }
+}
