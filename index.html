@@ -453,6 +453,15 @@ a.scroll-link:hover,a.scroll-link:focus-visible{color:var(--acid)!important}
 
 /* v0.34 — Dark Matter legibility: lift the map so streets and town names read clearly */
 .map-dark .map-tile,.map-dark .map-shell .leaflet-tile-pane{filter:brightness(1.55) contrast(1.08)}
+
+/* v0.35 — light CARTO styles (preview), casing for the lime track, no blue system text on iOS buttons */
+.map-light .map-tile,.map-light .map-shell .leaflet-tile-pane{filter:none;opacity:1}
+.map-light .route-bg-map,.map-light .map-shell,.map-light .map-shell .leaflet-container,.map-light .archive-list-thumb{background:#e9ebe6!important}
+.map-light .route-bg-map:before{opacity:0}
+.card-track .casing{stroke:#1d2611;stroke-width:6.4;filter:none}
+.map-light .route-attribution{color:#3a3f36;text-shadow:none}
+button{color:inherit}
+.archive-list-item,.close-archive{color:var(--ink)}
 </style></head><body>
 <header class="site-header"><button aria-controls="mobile-nav" aria-expanded="false" aria-label="Abrir menú de navegación" class="mobile-menu-trigger" id="mobile-menu-trigger" type="button"><span>MENÚ</span><svg aria-hidden="true" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="15"><path d="m5 9 7 7 7-7"></path></svg></button><a aria-label="Cadencia y Decadencia — inicio" class="wordmark" href="#inicio">CADENCIA Y DECADENCIA</a><nav aria-label="Navegación principal" class="site-nav"><a href="#historia">NOSOTROS</a><a href="#equipo">LA BANDA</a><a href="#rutas">RUTAS</a><a href="#reto">PRÓXIMO RETO</a></nav><nav aria-label="Navegación móvil" class="mobile-nav" id="mobile-nav" inert=""><a href="#historia">NOSOTROS</a><a href="#equipo">LA BANDA</a><a href="#rutas">RUTAS</a><a href="#reto">PRÓXIMO RETO</a></nav></header>
 <main><section aria-label="Presentación" class="hero" id="inicio"><div class="hero-content"><div class="hero-intro"><span class="hero-location">RIVAS · MADRID</span><p class="hero-copy"><strong>Rutas, kilómetros y buena compañía.</strong><br/>Salimos desde Rivas con muchas ganas de dar pedales, descubrir caminos nuevos y pasar una buena mañana juntos. Siempre volvemos con las piernas cansadas, alguna historia nueva y la sensación de que el próximo finde repetimos.</p><a class="scroll-link mobile-explore" href="#historia">EXPLORAR <span class="scroll-circle"><svg aria-hidden="true" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.85" viewbox="0 0 24 24" width="17"><path d="M12 4v16m-7-7 7 7 7-7"></path></svg></span></a></div></div><div class="hero-bottom"><a class="scroll-link" href="#historia">EXPLORAR <span class="scroll-circle"><svg aria-hidden="true" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.85" viewbox="0 0 24 24" width="17"><path d="M12 4v16m-7-7 7 7 7-7"></path></svg></span></a></div></section>
@@ -468,15 +477,16 @@ a.scroll-link:hover,a.scroll-link:focus-visible{color:var(--acid)!important}
    it is a public, browser-side key: get it free at carto.com/basemaps/apikey). Without a key, or with
    ?mapa=osm, the OpenStreetMap standard style is used so the map never shows a watermark. */
 const CARTO_KEY='cb1_4mgd_1_fce905e396f871e304b436f6';
-const MAP_STYLE=(()=>{try{const q=new URLSearchParams(location.search).get('mapa');if(q==='osm')return 'osm';if(q==='dark')return 'dark'}catch{}return CARTO_KEY?'dark':'osm'})();
+const CARTO_STYLES={dark:'dark_all',positron:'light_all',voyager:'voyager'};
+const MAP_STYLE=(()=>{try{const q=new URLSearchParams(location.search).get('mapa');if(q==='osm'||(q in CARTO_STYLES&&CARTO_KEY))return q}catch{}return CARTO_KEY?'dark':'osm'})();
 /* Double-resolution tiles on retina screens keep street and town names sharp; any @2x tile that fails
    falls back to the standard one (see tileFallback and the Leaflet tileerror handler). */
 const RETINA=(window.devicePixelRatio||1)>1.4?'@2x':'';
 function tileFallback(img){if(img.src.includes('@2x.')){img.src=img.src.replace('@2x.','.')}else{img.style.display='none'}}
-const BASEMAP=MAP_STYLE==='dark'
- ?{tile:(z,x,y)=>`https://basemaps.cartocdn.com/rastertiles/dark_all/${z}/${x}/${y}${RETINA}.png?key=${CARTO_KEY}`,leaflet:`https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}${RETINA}.png?key=${CARTO_KEY}`,subdomains:'',maxZoom:20,credit:'© OpenStreetMap · © CARTO',line:'#cefb11'}
- :{tile:(z,x,y)=>`https://tile.openstreetmap.org/${z}/${x}/${y}.png`,leaflet:'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',subdomains:'abc',maxZoom:18,credit:'© OpenStreetMap',line:'#d9ef78'};
-if(MAP_STYLE==='dark')document.documentElement.classList.add('map-dark');
+const BASEMAP=MAP_STYLE in CARTO_STYLES
+ ?{tile:(z,x,y)=>`https://basemaps.cartocdn.com/rastertiles/${CARTO_STYLES[MAP_STYLE]}/${z}/${x}/${y}${RETINA}.png?key=${CARTO_KEY}`,leaflet:`https://basemaps.cartocdn.com/rastertiles/${CARTO_STYLES[MAP_STYLE]}/{z}/{x}/{y}${RETINA}.png?key=${CARTO_KEY}`,subdomains:'',maxZoom:20,credit:'© OpenStreetMap · © CARTO',line:'#cefb11',casing:MAP_STYLE!=='dark'}
+ :{tile:(z,x,y)=>`https://tile.openstreetmap.org/${z}/${x}/${y}.png`,leaflet:'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',subdomains:'abc',maxZoom:18,credit:'© OpenStreetMap',line:'#d9ef78',casing:false};
+document.documentElement.classList.add(MAP_STYLE==='dark'?'map-dark':MAP_STYLE==='osm'?'map-osm':'map-light');
 const ROUTES_URL='data/routes.json',RIDERS_URL='data/riders.json',ROUTE_TZ='Europe/Madrid';
 const ROUTE_TYPE='MTB';
 const people={"tochi": ["Tochi", "El CEO de las cuestas.", "No convoca reuniones: convoca rutas. Siempre tiene un plan, una subida más y energía de sobra para convencernos de que hoy toca sufrir un poquito."], "david": ["David", "Fondo infinito. Gadgets también.", "Mientras el resto pregunta cuánto queda, él todavía está calentando. Tiene más kilómetros en las piernas y más equipamiento en la bici que una tienda especializada."], "jorge": ["Jorge", "Experto en posponer la alarma.", "Alguna vez se queda dormido y pierde la salida. Pero cuando aparece, viene con ganas, alguna foto y la firme convicción de que el madrugón merecía la pena."], "javi": ["Javi", "Cero quejas. Máxima técnica.", "Elige la trazada que nadie ve, pasa por donde otros dudan y sigue sumando kilómetros sin protestar. Tanto, que a veces parece que no le cuesta."]};
@@ -542,7 +552,7 @@ function cardTrackMarkup(r){
  const cx=(Math.min(...xs)+Math.max(...xs))/2,cy=(Math.min(...ys)+Math.max(...ys))/2,n=256*2**z;
  const center=[Math.atan(Math.sinh(Math.PI*(1-2*cy/n)))*180/Math.PI,cx/n*360-180];
  const d=xy.map((p,i)=>(i?'L':'M')+(p[0]-cx).toFixed(1)+' '+(p[1]-cy).toFixed(1)).join('');
- return tileMapMarkup(center,{zoom:z})+`<svg class="card-track" width="1" height="1" aria-hidden="true"><path d="${d}"/></svg>`;
+ return tileMapMarkup(center,{zoom:z})+`<svg class="card-track" width="1" height="1" aria-hidden="true">${BASEMAP.casing?`<path class="casing" d="${d}"/>`:''}<path d="${d}"/></svg>`;
 }
 /* v0.26 — card data panel: title / date, big distance, real elevation profile, duration. */
 function profileMarkup(r,index){
@@ -608,7 +618,7 @@ function renderDetail(r){
    r.device?`<div class="detail-stat"><strong>${escapeHtml(r.device)}</strong><span>Registro</span></div>`:''
  ].join('');
  detail.innerHTML=`<div class="detail-meta">${escapeHtml(topMeta)}</div><h3 class="detail-title">${escapeHtml(r.title)}</h3>
- <div class="map-shell" id="route-map"></div><div class="map-actions"><span>${hasGPS?'Track GPS disponible':r.center?'Mapa de referencia':'Localización no registrada'}</span>${hasGPS||r.center?'<span>Cartografía ${BASEMAP.credit}</span>':''}</div>
+ <div class="map-shell" id="route-map"></div><div class="map-actions"><span>${hasGPS?'Track GPS disponible':r.center?'Mapa de referencia':'Localización no registrada'}</span>${hasGPS||r.center?`<span>Cartografía ${BASEMAP.credit}</span>`:''}</div>
  <div class="detail-stats">${extraStats}</div>${ridersMarkup(r)}${r.sourceNote?`<p class="detail-source-note">${escapeHtml(r.sourceNote)}</p>`:''}`;
  const box=document.getElementById('route-map');
  if(hasGPS){
@@ -633,7 +643,7 @@ function renderInteractiveMap(box,{points,center},info,routeId){
   const map=L.map(box.firstChild,{zoomControl:false,attributionControl:false,scrollWheelZoom:false,zoomSnap:.5});mapInstance=map;
   L.tileLayer(BASEMAP.leaflet,{maxZoom:BASEMAP.maxZoom,subdomains:BASEMAP.subdomains}).on('tileerror',e=>{if(e.tile.src.includes('@2x.'))e.tile.src=e.tile.src.replace('@2x.','.')}).addTo(map);
   let bounds=null;
-  if(points){const line=L.polyline(points,{color:BASEMAP.line,weight:5,opacity:1}).addTo(map);bounds=line.getBounds();
+  if(points){if(BASEMAP.casing)L.polyline(points,{color:'#1d2611',weight:9,opacity:.9,interactive:false}).addTo(map);const line=L.polyline(points,{color:BASEMAP.line,weight:5,opacity:1}).addTo(map);bounds=line.getBounds();
    L.circleMarker(points[0],{radius:6,color:'#fff',weight:3,fillColor:'#27382a',fillOpacity:1}).addTo(map).bindTooltip('Inicio');
    L.circleMarker(points[points.length-1],{radius:6,color:'#27382a',weight:3,fillColor:'#cefb11',fillOpacity:1}).addTo(map).bindTooltip('Final')}
   else L.circleMarker(center,{radius:9,color:'#fff',weight:5,fillColor:'#27382a',fillOpacity:1}).addTo(map);
@@ -642,7 +652,8 @@ function renderInteractiveMap(box,{points,center},info,routeId){
   const Fit=L.Control.extend({onAdd(){const b=L.DomUtil.create('button','map-fit leaflet-bar');b.type='button';b.title=bounds?'Ver ruta completa':'Centrar mapa';b.setAttribute('aria-label',b.title);b.innerHTML='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';L.DomEvent.disableClickPropagation(b);L.DomEvent.on(b,'click',fit);return b}});new Fit({position:'topright'}).addTo(map);
   L.control.attribution({position:'bottomright',prefix:false}).addAttribution(BASEMAP.credit).addTo(map);
   map.on('click focus',()=>map.scrollWheelZoom.enable());map.on('mouseout blur',()=>map.scrollWheelZoom.disable());
-  setTimeout(()=>map.invalidateSize(),150);
+  const born=Date.now(),ro=new ResizeObserver(()=>{map.invalidateSize();if(Date.now()-born<1500)fit()});ro.observe(box);map.on('unload',()=>ro.disconnect());
+  setTimeout(()=>{map.invalidateSize();fit()},150);
  }).catch(e=>console.warn(e.message));
 }
 function toast(msg){const t=document.getElementById('import-toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),3500)}
