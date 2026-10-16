@@ -212,6 +212,10 @@ export class RouteDb {
     into.activities.push(...from.activities);
     into.participants = [...new Set([...into.participants, ...from.participants])];
     if (!into.source_note && from.source_note) into.source_note = from.source_note;
+    // A stats-only route (no location yet) inherits the place found from the GPS track.
+    const loc = into.start_location || (into.start_location = { label: null, lat: null, lon: null });
+    if (!loc.label && from.start_location?.label) loc.label = from.start_location.label;
+    if (loc.lat == null && from.start_location?.lat != null) { loc.lat = from.start_location.lat; loc.lon = from.start_location.lon; }
     this.data.routes = this.routes.filter((r) => r !== from);
     for (const r of this.reviews) {
       if (r.status === 'open' && r.routes.includes(fromId) && r.routes.includes(intoId)) r.status = 'merged';

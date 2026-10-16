@@ -222,3 +222,17 @@ test('device boilerplate names become short card titles', async () => {
   assert.equal(cleanActivityName('Bicicleta por la mañana'), null);
   assert.equal(cleanActivityName('Vuelta al Cerro de los Ángeles'), 'Vuelta al Cerro de los Ángeles');
 });
+
+test('merging a GPX into a stats-only route without location gives it the GPS place', async () => {
+  const dir = tempRepo();
+  drop(dir, 'jorge', 'sep6.gpx', toGpx(loop({ km: 60, start: '2026-09-06T06:10:00Z' })));
+  await importInto(dir);
+  const review = readDb(dir).reviews.find((r) => r.routes.includes('salud-2026-09-06'));
+  assert.ok(review, 'flagged for review against the legacy route');
+  const load = RouteDb.load({ routesFile: path.join(dir, 'data/routes.json'), ridersFile: path.join(dir, 'data/riders.json'), root: dir });
+  await runReview(['merge', review.routes[0], 'salud-2026-09-06'], { db: load, report: silentReport() });
+  const r = readDb(dir).routes.find((x) => x.id === 'salud-2026-09-06');
+  assert.equal(r.start_location.label, 'Rivas-Vaciamadrid · Madrid');
+  assert.ok(r.map_center && r.track && r.elevation_profile);
+  assert.equal(r.distance_km, 65.71, 'reviewed numbers stay');
+});
