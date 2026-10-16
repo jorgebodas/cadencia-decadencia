@@ -178,7 +178,7 @@
       "primary_activity": "salud-2026-10-10-original",
       "pin_primary": true,
       "stats_locked": true,
-      "source_note": "Datos corregidos de la salida del 10 de octubre: 52,21 km y 3h 15m según tu revisión; 472 m+ medidos en Strava (Komoot estimó 607 m). Garmin registró 44,76 km para esa fecha. Se presenta como una única salida, no dos.",
+      "source_note": null,
       "activities": [
         {
           "id": "salud-2026-10-10-original",

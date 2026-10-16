@@ -371,6 +371,8 @@ a.scroll-link:hover,a.scroll-link:focus-visible{color:var(--acid)!important}
 .detail-riders li strong{display:block;font-size:19px;letter-spacing:-.05em;font-weight:500}
 .detail-riders li span{display:block;color:#71776a;font:10px/1.6 var(--mono);margin-top:3px}
 .detail-riders a{text-decoration:underline;text-underline-offset:3px;color:#393f34}
+.map-shell .map-fit{width:34px;height:34px;display:grid;place-items:center;background:#fff;color:#1b1c1a;cursor:pointer;padding:0}
+.map-shell .map-fit:hover{background:#f4f4f4}
 @media(max-width:670px){.detail-riders li strong{font-size:17px}.routes-status{padding:20px 0}}
 </style></head><body>
 <header class="site-header"><button aria-controls="mobile-nav" aria-expanded="false" aria-label="Abrir menú de navegación" class="mobile-menu-trigger" id="mobile-menu-trigger" type="button"><span>MENÚ</span><svg aria-hidden="true" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="15"><path d="m5 9 7 7 7-7"></path></svg></button><a aria-label="Cadencia y Decadencia — inicio" class="wordmark" href="#inicio">CADENCIA Y DECADENCIA</a><nav aria-label="Navegación principal" class="site-nav"><a href="#historia">NOSOTROS</a><a href="#equipo">LA BANDA</a><a href="#rutas">RUTAS</a><a href="#reto">PRÓXIMO RETO</a></nav><nav aria-label="Navegación móvil" class="mobile-nav" id="mobile-nav" inert=""><a href="#historia">NOSOTROS</a><a href="#equipo">LA BANDA</a><a href="#rutas">RUTAS</a><a href="#reto">PRÓXIMO RETO</a></nav></header>
@@ -486,7 +488,6 @@ function ridersMarkup(r){
  return `<div class="detail-riders"><span class="detail-riders-title">${ids.length>1?ids.length+' ciclistas':'Ciclista'}</span><ul>${rows}</ul></div>`;
 }
 function fetchTrack(path){if(!trackCache.has(path))trackCache.set(path,fetch(path,{cache:'force-cache'}).then(res=>{if(!res.ok)throw Error('HTTP '+res.status);return res.json()}).then(t=>{const pts=(t.points||[]).filter(p=>Number.isFinite(p[0])&&Number.isFinite(p[1])).map(p=>[p[0],p[1]]);if(pts.length<2)throw Error('Track vacío');return pts}).catch(e=>{trackCache.delete(path);throw e}));return trackCache.get(path)}
-function renderReferenceMap(box,r,info){box.innerHTML=`<div class="route-bg-map">${tileMapMarkup(r.center,{zoom:12})}<div class="map-center-dot"></div></div><div class="map-note">${info}</div><span style="position:absolute;top:12px;right:12px;z-index:4;color:#fff;font:500 10px var(--sans);text-shadow:0 1px 8px #000">© OpenStreetMap contributors</span>`}
 function renderDetail(r){
  if(mapInstance){mapInstance.remove();mapInstance=null}
  const detail=document.getElementById('archive-detail');
@@ -494,30 +495,53 @@ function renderDetail(r){
  const hasGPS=!!r.track;
  const recorder=r.trackRider?`Trazado registrado por ${escapeHtml(riderName(r.trackRider))}.`:'Trazado del GPX importado.';
  const mapInfo=hasGPS?`<strong>Recorrido GPS original</strong>${recorder} Inicio y final recortados por privacidad.`:r.center?'<strong>Mapa de referencia</strong>Se muestra la zona de la salida. El track GPS no está disponible.':'<strong>Ubicación por confirmar</strong>Tenemos las estadísticas, pero no la localización exacta del recorrido.';
- const mapsLink=r.center?`<a href="https://www.openstreetmap.org/#map=12/${r.center[0]}/${r.center[1]}" target="_blank" rel="noopener noreferrer">Abrir zona en OpenStreetMap ↗</a>`:'<span>Localización no registrada</span>';
  const topMeta=[formatDate(r.date), formatClock(r.start_time), r.type||ROUTE_TYPE, (r.origin||'GPX').replace('Salud · ','')].filter(Boolean).join(' · ');
  const extraStats=[
    `<div class="detail-stat"><strong>${fmtKm(r.distance)} km</strong><span>Distancia</span></div>`,
    `<div class="detail-stat"><strong>+${fmtElev(r.elevation)} m</strong><span>Ascenso</span></div>`,
    `<div class="detail-stat"><strong>${fmtDur(r.duration_s)}</strong><span>Tiempo</span></div>`,
    r.avg_speed?`<div class="detail-stat"><strong>${fmtKm(r.avg_speed)} km/h</strong><span>Media</span></div>`:'',
-   r.avg_hr?`<div class="detail-stat"><strong>${Math.round(r.avg_hr)} lpm</strong><span>FC media</span></div>`:'',
    r.locationLabel?`<div class="detail-stat"><strong>${escapeHtml(r.locationLabel)}</strong><span>Zona</span></div>`:'',
    r.device?`<div class="detail-stat"><strong>${escapeHtml(r.device)}</strong><span>Registro</span></div>`:''
  ].join('');
  detail.innerHTML=`<div class="detail-meta">${escapeHtml(topMeta)}</div><h3 class="detail-title">${escapeHtml(r.title)}</h3>
- <div class="map-shell" id="route-map"></div><div class="map-actions"><span>${hasGPS?'Track GPS disponible':'Mapa de referencia'}</span>${hasGPS?'<span>Cartografía © OpenStreetMap</span>':mapsLink}</div>
+ <div class="map-shell" id="route-map"></div><div class="map-actions"><span>${hasGPS?'Track GPS disponible':r.center?'Mapa de referencia':'Localización no registrada'}</span>${hasGPS||r.center?'<span>Cartografía © OpenStreetMap</span>':''}</div>
  <div class="detail-stats">${extraStats}</div>${ridersMarkup(r)}${r.sourceNote?`<p class="detail-source-note">${escapeHtml(r.sourceNote)}</p>`:''}`;
  const box=document.getElementById('route-map');
  if(hasGPS){
   box.innerHTML='<div class="map-loading">Cargando recorrido GPS…</div>';
-  fetchTrack(r.track).then(points=>{r.points=points;if(activeRouteId===r.id&&box.isConnected)renderTrackMap(box,points,mapInfo)}).catch(e=>{console.error('Track no disponible:',e);if(!box.isConnected)return;if(r.center)renderReferenceMap(box,r,'<strong>Track no disponible</strong>No hemos podido cargar el trazado GPS. Se muestra la zona de la salida.');else box.innerHTML='<div class="map-loading">Track no disponible</div>'});
+  fetchTrack(r.track).then(points=>{r.points=points;if(activeRouteId===r.id&&box.isConnected)renderInteractiveMap(box,{points},mapInfo,r.id)}).catch(e=>{console.error('Track no disponible:',e);if(!box.isConnected)return;if(r.center)renderInteractiveMap(box,{center:r.center},'<strong>Track no disponible</strong>No hemos podido cargar el trazado GPS. Se muestra la zona de la salida.',r.id);else box.innerHTML='<div class="map-loading">Track no disponible</div>'});
  }
- else if(r.center){renderReferenceMap(box,r,mapInfo)}
+ else if(r.center){renderInteractiveMap(box,{center:r.center},mapInfo,r.id)}
  else{box.innerHTML=`<div class="geo-blank" style="background:repeating-radial-gradient(ellipse at 50% 47%,transparent 0 19px,#cfe9cd21 20px 21px,transparent 22px 42px),linear-gradient(145deg,#6b8672,#354d3f)"><span class="geo-point">◎</span><span class="geo-city">RUTA SIN LOCALIZAR</span></div><div class="map-note">${mapInfo}</div>`}
 }
 function svgTrack(points){const lat=points.map(p=>p[0]),lon=points.map(p=>p[1]);const minLat=Math.min(...lat),maxLat=Math.max(...lat),minLon=Math.min(...lon),maxLon=Math.max(...lon);const dx=Math.max(0.00001,maxLon-minLon),dy=Math.max(0.00001,maxLat-minLat);const scale=Math.min(860/dx,480/dy),px=(930-dx*scale)/2,py=(540-dy*scale)/2;let d=points.map((p,i)=>`${i===0?'M':'L'} ${(px+(p[1]-minLon)*scale).toFixed(1)} ${(py+(maxLat-p[0])*scale).toFixed(1)}`).join(' ');return `<div class="track-fallback"><svg viewBox="0 0 930 540" preserveAspectRatio="xMidYMid meet" aria-label="Trazado GPS importado"><path d="${d}"></path></svg></div>`}
-function renderTrackMap(box,points,info){box.innerHTML=svgTrack(points)+`<div class="map-note">${info}</div>`;const init=()=>{if(!window.L||!box.isConnected)return;try{box.innerHTML='<div id="leaflet-map" style="height:100%;width:100%"></div><div class="map-note">'+info+'</div>';const map=L.map('leaflet-map',{zoomControl:false,attributionControl:false,scrollWheelZoom:false});mapInstance=map;L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(map);let line=L.polyline(points,{color:'#d9ef78',weight:5,opacity:1}).addTo(map);map.fitBounds(line.getBounds(),{padding:[35,35]});L.control.zoom({position:'topright'}).addTo(map);L.control.attribution({position:'bottomright',prefix:false}).addTo(map);setTimeout(()=>map.invalidateSize(),150)}catch(e){box.innerHTML=svgTrack(points)+`<div class="map-note">${info}</div>`}};if(window.L){init();return}if(!document.getElementById('leaflet-style')){const l=document.createElement('link');l.id='leaflet-style';l.rel='stylesheet';l.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';document.head.appendChild(l)}if(!document.getElementById('leaflet-script')){const s=document.createElement('script');s.id='leaflet-script';s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';s.onload=()=>{if(activeRouteId&&box.isConnected)init()};document.head.appendChild(s)}else document.getElementById('leaflet-script').addEventListener('load',init,{once:true})}
+/* v0.25 — interactive Leaflet map for every located route: buttons, pinch, double-click and
+   scroll zoom (scroll only after clicking the map, so the archive still scrolls), drag to follow the
+   track, and a button to re-fit the whole route. A static preview shows while Leaflet loads. */
+let leafletPromise=null;
+function loadLeaflet(){if(window.L)return Promise.resolve(window.L);if(!leafletPromise){leafletPromise=new Promise((resolve,reject)=>{if(!document.getElementById('leaflet-style')){const l=document.createElement('link');l.id='leaflet-style';l.rel='stylesheet';l.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';document.head.appendChild(l)}const sc=document.createElement('script');sc.id='leaflet-script';sc.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';sc.onload=()=>resolve(window.L);sc.onerror=()=>{leafletPromise=null;sc.remove();reject(Error('Leaflet no disponible'))};document.head.appendChild(sc)})}return leafletPromise}
+function renderInteractiveMap(box,{points,center},info,routeId){
+ box.innerHTML=(points?svgTrack(points):`<div class="route-bg-map">${tileMapMarkup(center,{zoom:12})}<div class="map-center-dot"></div></div>`)+`<div class="map-note">${info}</div>`;
+ loadLeaflet().then(L=>{
+  if(!box.isConnected||activeRouteId!==routeId)return;
+  if(mapInstance){mapInstance.remove();mapInstance=null}
+  box.innerHTML='<div class="leaflet-host" style="height:100%;width:100%"></div><div class="map-note">'+info+'</div>';
+  const map=L.map(box.firstChild,{zoomControl:false,attributionControl:false,scrollWheelZoom:false,zoomSnap:.5});mapInstance=map;
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(map);
+  let bounds=null;
+  if(points){const line=L.polyline(points,{color:'#d9ef78',weight:5,opacity:1}).addTo(map);bounds=line.getBounds();
+   L.circleMarker(points[0],{radius:6,color:'#fff',weight:3,fillColor:'#27382a',fillOpacity:1}).addTo(map).bindTooltip('Inicio');
+   L.circleMarker(points[points.length-1],{radius:6,color:'#27382a',weight:3,fillColor:'#cefb11',fillOpacity:1}).addTo(map).bindTooltip('Final')}
+  else L.circleMarker(center,{radius:9,color:'#fff',weight:5,fillColor:'#27382a',fillOpacity:1}).addTo(map);
+  const fit=()=>bounds?map.fitBounds(bounds,{padding:[35,35]}):map.setView(center,12);fit();
+  L.control.zoom({position:'topright',zoomInTitle:'Acercar',zoomOutTitle:'Alejar'}).addTo(map);
+  const Fit=L.Control.extend({onAdd(){const b=L.DomUtil.create('button','map-fit leaflet-bar');b.type='button';b.title=bounds?'Ver ruta completa':'Centrar mapa';b.setAttribute('aria-label',b.title);b.innerHTML='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';L.DomEvent.disableClickPropagation(b);L.DomEvent.on(b,'click',fit);return b}});new Fit({position:'topright'}).addTo(map);
+  L.control.attribution({position:'bottomright',prefix:false}).addAttribution('© OpenStreetMap').addTo(map);
+  map.on('click focus',()=>map.scrollWheelZoom.enable());map.on('mouseout blur',()=>map.scrollWheelZoom.disable());
+  setTimeout(()=>map.invalidateSize(),150);
+ }).catch(e=>console.warn(e.message));
+}
 function toast(msg){const t=document.getElementById('import-toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),3500)}
 loadRoutes();
 

@@ -28,7 +28,8 @@ test('the three original routes are preserved with their exact values', () => {
     assert.equal(r.avg_hr_bpm, old.avg_hr);
     assert.deepEqual(r.map_center, old.center);
     assert.equal(r.start_location.label, old.locationLabel);
-    assert.equal(r.source_note, old.sourceNote);
+    // Editorial notes may be removed, but never rewritten.
+    if (r.source_note != null) assert.equal(r.source_note, old.sourceNote);
     assert.equal(r.stats_locked, true, 'reviewed numbers are protected from recomputation');
     const original = r.activities.find((a) => a.id === r.primary_activity);
     assert.equal(original.device, old.device);
