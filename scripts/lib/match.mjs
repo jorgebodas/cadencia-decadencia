@@ -64,7 +64,10 @@ export function spatialOverlap(aPts, bPts) {
   return { a_on_b: Math.round(ab * 100) / 100, b_on_a: Math.round(ba * 100) / 100 };
 }
 
-const durationS = (act) => act.elapsed_time_s || act.moving_time_s || null;
+const durationS = (act) => act.elapsed_time_s || act.moving_time_s || act.duration_s || null;
+
+// Garmin activity id, whether the record came from a Garmin summary or from a Garmin GPX export.
+const garminId = (act) => (act.source_activity_id && (act.source === 'garmin' || /garmin/i.test(act.source_label || '')) ? String(act.source_activity_id) : null);
 
 /**
  * Compare a new activity against an existing one.
@@ -76,6 +79,7 @@ export function compareActivities(a, aPts, b, bPts) {
   if (a.source_activity_id && a.source === b.source && a.source_activity_id === b.source_activity_id) {
     return { verdict: VERDICT.DUPLICATE, reason: `same ${a.source} activity id` };
   }
+  if (garminId(a) && garminId(a) === garminId(b)) return { verdict: VERDICT.DUPLICATE, reason: 'same Garmin activity id' };
 
   const aStart = a.start_time ? Date.parse(a.start_time) : null;
   const bStart = b.start_time ? Date.parse(b.start_time) : null;

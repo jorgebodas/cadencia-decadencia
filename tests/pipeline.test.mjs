@@ -236,3 +236,53 @@ test('merging a GPX into a stats-only route without location gives it the GPS pl
   assert.ok(r.map_center && r.track && r.elevation_profile);
   assert.equal(r.distance_km, 65.71, 'reviewed numbers stay');
 });
+
+const garminSummary = () => ({
+  route: { id: '2026-10-25-rivas-vaciamadrid', title: 'Rivas-Vaciamadrid', date: '2026-10-25', start_time: '2026-10-25T06:41:44Z', type: 'MTB', distance_km: 71.71, elevation_gain_m: 784, duration_s: 18217, avg_speed_kmh: 14.17, location_label: 'Rivas-Vaciamadrid', source_note: 'Resumen de Garmin; trazado GPS pendiente.' },
+  activity: { id: 'jorge-garmin-24846519648', rider: 'jorge', source: 'garmin', source_label: 'Garmin · Fitness AI Connector', source_activity_id: '24846519648', device: 'Garmin Instinct 3', name: 'Rivas-Vaciamadrid Ciclismo de montaña' },
+});
+
+test('stats-only Garmin summary: created once, idempotent, no invented GPS or times', async () => {
+  const dir = tempRepo();
+  const load = () => RouteDb.load({ routesFile: path.join(dir, 'data/routes.json'), ridersFile: path.join(dir, 'data/riders.json'), root: dir });
+  let db = load(); assert.equal(db.upsertSummary(garminSummary()).status, 'created'); db.save(path.join(dir, 'data/routes.json'));
+  db = load(); assert.equal(db.upsertSummary(garminSummary()).status, 'updated'); db.save(path.join(dir, 'data/routes.json'));
+  const routes = readDb(dir).routes.filter((r) => r.date === '2026-10-25');
+  assert.equal(routes.length, 1);
+  const [r] = routes;
+  assert.equal(r.activities.length, 1);
+  assert.equal(r.duration_s, 18217);
+  assert.equal(r.moving_time_s, null);
+  assert.equal(r.elapsed_time_s, null);
+  assert.equal(r.avg_hr_bpm, null);
+  assert.equal(r.track, null); assert.equal(r.preview, null); assert.equal(r.map_center, null); assert.equal(r.elevation_profile, null);
+  assert.equal(r.start_location.lat, null);
+  assert.equal(r.stats_locked, true);
+  assert.deepEqual(validateRepo(dir).errors, []);
+});
+
+test('the Garmin GPX imported later attaches to the summary instead of adding a route', async () => {
+  const dir = tempRepo();
+  const load = () => RouteDb.load({ routesFile: path.join(dir, 'data/routes.json'), ridersFile: path.join(dir, 'data/riders.json'), root: dir });
+  const db = load(); db.upsertSummary(garminSummary()); db.save(path.join(dir, 'data/routes.json'));
+  const gpx = toGpx(loop({ km: 70, kmh: 15, start: '2026-10-25T06:41:50Z', climb: 300 }));
+  drop(dir, 'jorge', 'activity_24846519648.gpx', gpx);
+  const rep = await importInto(dir);
+  assert.equal(rep.errors, 0, rep.lines.join('\n'));
+  assert.match(rep.lines.join('\n'), /GPS track attached/);
+  let r = readDb(dir).routes.filter((x) => x.date === '2026-10-25');
+  assert.equal(r.length, 1, 'still a single route');
+  r = r[0];
+  assert.equal(r.activities.length, 1);
+  assert.equal(r.track, 'data/tracks/jorge-garmin-24846519648.json');
+  assert.ok(r.preview && r.map_center && r.elevation_profile);
+  assert.equal(r.distance_km, 71.71, 'verified stats are kept');
+  assert.equal(r.elevation_gain_m, 784);
+  assert.equal(r.duration_s, 18217);
+  // Importing the same GPX again is a plain duplicate.
+  drop(dir, 'jorge', 'activity_24846519648-again.gpx', gpx);
+  const rep2 = await importInto(dir);
+  assert.match(rep2.lines.join('\n'), /duplicate/);
+  assert.equal(readDb(dir).routes.filter((x) => x.date === '2026-10-25').length, 1);
+  assert.deepEqual(validateRepo(dir).errors, []);
+});

@@ -95,6 +95,9 @@ export class RouteDb {
     const best = results[0];
 
     if (best?.verdict === VERDICT.DUPLICATE) {
+      // The same ride already exists as a stats-only record (e.g. a Garmin summary): attach the GPS
+      // track to it instead of discarding it, so the map and profile appear without a second route.
+      if (track && !best.other.track) return this.attachTrack(best.route, best.other, activity, track, best);
       return { status: 'duplicate', route: best.route, activity: best.other, match: best };
     }
     if (track) this.pendingTracks.set(activity.track, { activity: activity.id, start_time: activity.start_time, points: track });
@@ -125,6 +128,68 @@ export class RouteDb {
       reviews.push(review);
     }
     return { status: reviews.length ? 'new-needs-review' : 'new', route, activity, reviews };
+  }
+
+  // Adds GPS geometry to an existing activity. Its recorded statistics are left untouched: they stay
+  // the verified source unless someone reviews them explicitly.
+  attachTrack(route, target, incoming, track, match) {
+    const rel = `data/tracks/${target.id}.json`;
+    this.pendingTracks.set(rel, { activity: target.id, start_time: incoming.start_time, points: track });
+    target.track = rel;
+    target.map_center = incoming.map_center;
+    target.start_time ??= incoming.start_time;
+    target.sha256 ??= incoming.sha256;
+    target.source_activity_id ??= incoming.source_activity_id;
+    const loc = (route.start_location ||= { label: null, lat: null, lon: null });
+    if (loc.lat == null && track.length) { loc.lat = track[0][0]; loc.lon = track[0][1]; }
+    this.recompute(route);
+    return { status: 'track-attached', route, activity: target, match };
+  }
+
+  /**
+   * Create or update a ride from a verified activity summary (no GPS). Idempotent: the activity is
+   * found again by its id or by its source activity id, so running it twice never adds a route.
+   * summary = { route: {id, title, date, start_time, type, distance_km, elevation_gain_m, duration_s,
+   *             avg_speed_kmh, location_label, source_note}, activity: {id, rider, source, source_label,
+   *             source_activity_id, device, name} }
+   */
+  upsertSummary({ route: r, activity: a }) {
+    if (!this.rider(a.rider)) throw new Error(`Unknown rider "${a.rider}"`);
+    const stats = {
+      distance_km: r.distance_km ?? null, elevation_gain_m: r.elevation_gain_m ?? null,
+      moving_time_s: r.moving_time_s ?? null, elapsed_time_s: r.elapsed_time_s ?? null,
+      avg_speed_kmh: r.avg_speed_kmh ?? null, avg_hr_bpm: null,
+    };
+    const found = this.allActivities().find(({ activity: x }) => x.id === a.id
+      || (a.source_activity_id && String(x.source_activity_id) === String(a.source_activity_id)
+        && (x.source === a.source || /garmin/i.test(`${x.source_label} ${a.source_label}`))));
+    if (found) {
+      const { route, activity } = found;
+      Object.assign(activity, stats, { duration_s: r.duration_s ?? null, device: a.device ?? activity.device, source_label: activity.source_label ?? a.source_label });
+      Object.assign(route, stats, { duration_s: r.duration_s ?? null, stats_locked: true, pin_primary: true, primary_activity: activity.id });
+      if (r.source_note) route.source_note = r.source_note;
+      this.recompute(route);
+      return { status: 'updated', route, activity };
+    }
+    if (this.route(r.id)) throw new Error(`Route id "${r.id}" already exists with other activities; choose another id`);
+    const activity = {
+      id: a.id, rider: a.rider, source: a.source, source_label: a.source_label ?? null,
+      source_activity_id: a.source_activity_id ? String(a.source_activity_id) : null, url: null,
+      device: a.device ?? null, name: a.name ?? null, type: r.type ?? null, date: r.date,
+      start_time: r.start_time ?? null, ...stats, duration_s: r.duration_s ?? null, computed: [],
+      track: null, map_center: null, sha256: null, imported_at: new Date().toISOString().replace(/\.\d{3}Z$/, 'Z'),
+    };
+    const route = {
+      id: r.id, title: r.title, date: r.date, start_time: r.start_time ?? null, type: r.type ?? null,
+      ...stats, duration_s: r.duration_s ?? null,
+      start_location: { label: r.location_label ?? null, lat: null, lon: null },
+      map_center: null, track: null, preview: null, elevation_profile: null,
+      participants: [a.rider], primary_activity: activity.id, pin_primary: true, stats_locked: true,
+      source_note: r.source_note ?? null, activities: [activity],
+    };
+    this.routes.push(route);
+    this.recompute(route);
+    return { status: 'created', route, activity };
   }
 
   async createRoute(activity, { geocode }) {

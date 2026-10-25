@@ -702,7 +702,7 @@ const CLOCK_ICON='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" st
 function recentCard(r,index){
  const center=r.center&&r.center.length===2,hasGPS=!!r.preview;
  return `<button class="route-card" type="button" data-route="${escapeHtml(r.id)}" aria-label="Abrir detalle de ${escapeHtml(r.title)}">
-  <div class="route-bg-map">${hasGPS?cardTrackMarkup(r):tileMapMarkup(r.center)}${center&&!hasGPS?'<div class="map-center-dot"></div>':''}${!center&&!hasGPS?'<div class="map-unavailable">Ubicación del recorrido pendiente</div>':''}</div>
+  <div class="route-bg-map">${hasGPS?cardTrackMarkup(r):tileMapMarkup(r.center)}${center&&!hasGPS?'<div class="map-center-dot"></div>':''}${!center&&!hasGPS?'<div class="map-unavailable">Trazado GPS pendiente</div>':''}</div>
   ${center||hasGPS?`<span class="route-attribution">${BASEMAP.credit}</span>`:''}
   <div class="card-neon card-stat"><span class="stat-head">${escapeHtml(r.title)} <span>/ ${escapeHtml(formatCardDate(r.date).toLowerCase())}</span></span>
   <div class="stat-main"><span class="stat-distance">${fmtKm(r.distance)}<small> km</small></span></div>
@@ -815,7 +815,7 @@ function renderDetail(r){
   fetchTrack(r.track).then(points=>{r.points=points;if(activeRouteId===r.id&&box.isConnected)renderInteractiveMap(box,{points},'',r.id)}).catch(e=>{console.error('Track no disponible:',e);if(activeRouteId!==r.id)return;if(r.center)renderInteractiveMap(box,{center:r.center},'',r.id);else box.innerHTML='<div class="map-loading">Track no disponible</div>'});
  }
  else if(r.center){renderInteractiveMap(box,{center:r.center},'',r.id)}
- else{box.innerHTML='<div class="rv-nomap">Ruta sin localizar</div>'}
+ else{box.innerHTML='<div class="rv-nomap">Trazado GPS pendiente</div>'}
 }
 function svgTrack(points){const lat=points.map(p=>p[0]),lon=points.map(p=>p[1]);const minLat=Math.min(...lat),maxLat=Math.max(...lat),minLon=Math.min(...lon),maxLon=Math.max(...lon);const dx=Math.max(0.00001,maxLon-minLon),dy=Math.max(0.00001,maxLat-minLat);const scale=Math.min(860/dx,480/dy),px=(930-dx*scale)/2,py=(540-dy*scale)/2;let d=points.map((p,i)=>`${i===0?'M':'L'} ${(px+(p[1]-minLon)*scale).toFixed(1)} ${(py+(maxLat-p[0])*scale).toFixed(1)}`).join(' ');return `<div class="track-fallback"><svg viewBox="0 0 930 540" preserveAspectRatio="xMidYMid meet" aria-label="Trazado GPS importado"><path d="${d}"></path></svg></div>`}
 /* v0.25 — interactive Leaflet map for every located route: buttons, pinch, double-click and

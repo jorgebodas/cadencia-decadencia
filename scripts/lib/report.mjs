@@ -17,6 +17,8 @@ export function describeResult(res, fileLabel) {
   switch (res.status) {
     case 'duplicate':
       return `${fileLabel}: duplicate of \`${res.activity.id}\` in route \`${r.id}\` (${res.match.reason}) — skipped`;
+    case 'track-attached':
+      return `${fileLabel}: GPS track attached to \`${res.activity.id}\` in route \`${r.id}\` "${r.title}" (${res.match.reason}) — verified stats kept`;
     case 'joined':
       return `${fileLabel}: joined group ride \`${r.id}\` "${r.title}" — riders: ${r.participants.join(', ')} (${res.match.reason}, together ${Math.round((res.match.metrics?.together_ratio ?? 0) * 100)}%)`;
     case 'new':
