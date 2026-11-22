@@ -1,0 +1,83 @@
+name: Share pages
+
+# Keeps rutas/<id>/ (one page per route with Open Graph tags) and its preview image card.jpg in
+# step with data/routes.json, so a shared route link shows a tile of the route in WhatsApp & co.
+# Runs after the workflows that change the database (their bot pushes do not trigger push events)
+# and when someone edits the database or the generator by hand.
+on:
+  push:
+    branches: [main]
+    paths: ['data/routes.json', 'scripts/share.mjs', 'CNAME', '.github/workflows/share-pages.yml']
+  workflow_run:
+    workflows: ['Import routes', 'Review routes', 'Sync providers']
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: route-database
+  cancel-in-progress: false
+
+jobs:
+  share:
+    if: >-
+      github.actor != 'github-actions[bot]' || github.event_name == 'workflow_run'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Skip runs after a skipped or cancelled database workflow
+        id: gate
+        run: |
+          c="${{ github.event.workflow_run.conclusion }}"
+          if [ "${{ github.event_name }}" = "workflow_run" ] && { [ "$c" = "skipped" ] || [ "$c" = "cancelled" ]; }; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v5
+        if: steps.gate.outputs.run == 'true'
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v5
+        if: steps.gate.outputs.run == 'true'
+        with:
+          node-version: 22
+
+      # Only the browser driver: the runner's preinstalled Google Chrome renders the cards.
+      - name: Install playwright-core
+        if: steps.gate.outputs.run == 'true'
+        run: npm install --no-save --no-package-lock --no-audit --no-fund playwright-core@1.49.1
+
+      - name: Build share pages and images
+        id: share
+        if: steps.gate.outputs.run == 'true'
+        continue-on-error: true
+        run: node scripts/share.mjs
+
+      - name: Commit and push
+        id: commit
+        if: steps.gate.outputs.run == 'true'
+        run: bash scripts/commit-and-push.sh "Update route share pages"
+
+      - name: Request GitHub Pages build
+        if: steps.commit.outputs.pushed == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -fsS -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages/builds"
+
+      - name: Report routes without a current preview image
+        if: steps.share.outcome == 'failure'
+        run: |
+          echo "::error::Some share images could not be rendered (see the 'Build share pages and images' step). Their pages were still published and the next run retries them."
+          exit 1

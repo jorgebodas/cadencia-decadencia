@@ -10,7 +10,7 @@ branch="${GITHUB_REF_NAME:-main}"
 
 git config user.name "github-actions[bot]"
 git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-git add -A data imports
+git add -A data imports rutas
 
 if git diff --cached --quiet; then
   echo "No changes to commit."

@@ -51,6 +51,20 @@ Garmin's Connect Developer Program is business-only and not accepting applicatio
 
 The adapter is covered by mocked tests but has not yet been run against the live API.
 
+## Sharing a route
+
+Every route has its own link, `https://decadencia.es/rutas/<route-id>/`, with link-preview tags and a
+1200×630 image (`rutas/<route-id>/card.jpg`: the track on the map plus distance, climb, profile and time),
+so WhatsApp, Telegram, iMessage… show a tile of the route. Opening the link takes people straight to that
+route on the site. In the route viewer the share button (next to ✕) shares or copies the link, and the
+address bar shows it while a route is open. The home page previews with the latest route (`rutas/ultima.jpg`).
+
+The **Share pages** workflow keeps `rutas/` up to date: it runs after every import, review or sync, and on
+pushes that change `data/routes.json`. It renders only cards whose data changed (`node scripts/share.mjs`;
+`SHARE_IMAGES=off` writes the pages without images). A route link that is not generated yet still works
+through `404.html`. Apps cache previews per link, so a card that changes later may take a while to refresh
+in chats where the link was already shared.
+
 ## Maps
 
 Cards and route maps use CARTO Dark Matter (OpenStreetMap data). CARTO requires a free basemaps key

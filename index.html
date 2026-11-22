@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 
-<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="#151714" name="theme-color"/><meta content="Cadencia / Decadencia, amigos, bicicletas y muchas excusas para salir a rodar." name="description"/><title>Cadencia / Decadencia — Rivas · Madrid</title>
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="#151714" name="theme-color"/><meta content="Cadencia / Decadencia, amigos, bicicletas y muchas excusas para salir a rodar." name="description"/>
+<meta content="website" property="og:type"/>
+<meta content="Cadencia / Decadencia" property="og:site_name"/>
+<meta content="es_ES" property="og:locale"/>
+<meta content="https://decadencia.es/" property="og:url"/>
+<meta content="Cadencia / Decadencia — Rivas · Madrid" property="og:title"/>
+<meta content="Amigos, bicicletas y muchas excusas para salir a rodar. Nuestras rutas, kilómetro a kilómetro." property="og:description"/>
+<meta content="https://decadencia.es/rutas/ultima.jpg" property="og:image"/>
+<meta content="1200" property="og:image:width"/>
+<meta content="630" property="og:image:height"/>
+<meta content="summary_large_image" name="twitter:card"/><title>Cadencia / Decadencia — Rivas · Madrid</title>
 <link href="https://unpkg.com" rel="preconnect"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/><style>
 :root{--paper:#f1f1ed;--ink:#1b1c1a;--dark:#10110f;--line:#d4d4cd;--muted:#70726a;--lime:#dbeb78;--mono:'Inter','Helvetica Neue',Arial,sans-serif;--sans:'Inter','Helvetica Neue',Arial,sans-serif}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}body.modal-open{overflow:hidden}a{text-decoration:none;color:inherit}button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,label:focus-visible{outline:2px solid #a9ba50;outline-offset:4px}::selection{background:var(--lime);color:#10110f}
 .mono{font-family:var(--mono);font-size:11px;letter-spacing:.045em}.eyebrow{text-transform:uppercase;font:600 10px var(--mono);letter-spacing:.08em}.site-header{position:absolute;z-index:8;left:0;right:0;top:0;display:grid;grid-template-columns:1fr auto 1fr;align-items:start;color:white;padding:31px clamp(24px,4vw,72px)}.site-nav{display:flex;gap:29px;padding-top:13px;font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.05em}.site-nav.end{justify-content:flex-end}.site-nav a{opacity:.89;transition:opacity .3s}.site-nav a:hover{opacity:.58}.wordmark{width:146px;display:flex;flex-direction:column;text-align:center;align-items:center;transform:rotate(-5deg);font-size:24px;font-weight:900;line-height:.83;letter-spacing:-.085em;text-transform:uppercase}.wordmark span:nth-child(2){margin-left:21px}
@@ -581,6 +591,14 @@ a.rv-rider:hover{border-color:var(--ink)}
 .rv-pane-cal{padding-top:12px}
 @media(min-width:900px){.rv-dock,.rv-menu{left:24px}.rv-dock{right:24px;bottom:24px}.rv-menu{bottom:calc(24px + 66px)}}
 @media(max-width:380px){.rv-dock .rv-trigger{padding:0 14px}.rv-dock.menu-open .rv-trigger span{display:none}}
+
+/* v0.41 — share button beside close: each route has its own link (rutas/<id>/) with a preview image */
+.rv-dock-right{display:flex;align-items:center;gap:8px}
+.rv-dock .rv-share{position:relative;width:54px;height:54px;min-width:54px;border-radius:18px;background:#141a0f;color:#fff;box-shadow:0 14px 34px rgba(10,14,8,.32)}
+.rv-dock .rv-share:hover{background:#222a1b}
+.rv-share-done{position:absolute;right:0;bottom:calc(100% + 10px);padding:9px 13px;border-radius:12px;background:#141a0f;color:#fff;font:600 13px/1 var(--sans);white-space:nowrap;opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s;pointer-events:none}
+.rv-share.copied .rv-share-done{opacity:1;transform:none}
+@media(max-width:560px){.rv-dock.menu-open .rv-share{display:none}}
 </style></head><body>
 <header class="site-header"><button aria-controls="mobile-nav" aria-expanded="false" aria-label="Abrir menú de navegación" class="mobile-menu-trigger" id="mobile-menu-trigger" type="button"><span>MENÚ</span><svg aria-hidden="true" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="15"><path d="m5 9 7 7 7-7"></path></svg></button><a aria-label="Cadencia y Decadencia — inicio" class="wordmark" href="#inicio">CADENCIA Y DECADENCIA</a><nav aria-label="Navegación principal" class="site-nav"><a href="#historia">NOSOTROS</a><a href="#equipo">LA BANDA</a><a href="#rutas">RUTAS</a><a href="#reto">PRÓXIMO RETO</a></nav><nav aria-label="Navegación móvil" class="mobile-nav" id="mobile-nav" inert=""><a href="#historia">NOSOTROS</a><a href="#equipo">LA BANDA</a><a href="#rutas">RUTAS</a><a href="#reto">PRÓXIMO RETO</a></nav></header>
 <main><section aria-label="Presentación" class="hero" id="inicio"><div class="hero-content"><div class="hero-intro"><span class="hero-location">RIVAS · MADRID</span><p class="hero-copy"><strong>Rutas, kilómetros y buena compañía.</strong><br/>Salimos desde Rivas con muchas ganas de dar pedales, descubrir caminos nuevos y pasar una buena mañana juntos. Siempre volvemos con las piernas cansadas, alguna historia nueva y la sensación de que el próximo finde repetimos.</p><a class="scroll-link mobile-explore" href="#historia">EXPLORAR <span class="scroll-circle"><svg aria-hidden="true" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.85" viewbox="0 0 24 24" width="17"><path d="M12 4v16m-7-7 7 7 7-7"></path></svg></span></a></div></div><div class="hero-bottom"><a class="scroll-link" href="#historia">EXPLORAR <span class="scroll-circle"><svg aria-hidden="true" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.85" viewbox="0 0 24 24" width="17"><path d="M12 4v16m-7-7 7 7 7-7"></path></svg></span></a></div></section>
@@ -598,7 +616,7 @@ a.rv-rider:hover{border-color:var(--ink)}
 <button class="rv-trigger" id="rv-menu-btn" type="button" aria-expanded="false" aria-controls="rv-menu"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg><span>Rutas</span></button>
 <div class="rv-tabs" role="tablist" aria-label="Vista"><button type="button" role="tab" id="rv-tab-list" aria-controls="rv-pane-list" aria-selected="true">Lista</button><button type="button" role="tab" id="rv-tab-cal" aria-controls="rv-pane-cal" aria-selected="false">Calendario</button></div>
 </div>
-<button class="rv-close" id="close-archive" type="button" aria-label="Cerrar rutas"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+<div class="rv-dock-right"><button class="rv-share" id="rv-share" type="button" aria-label="Compartir ruta" title="Compartir ruta"><svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7.5 7.5 12 3l4.5 4.5M5 12v6.5A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V12"/></svg><span class="rv-share-done" aria-hidden="true">Enlace copiado</span></button><button class="rv-close" id="close-archive" type="button" aria-label="Cerrar rutas"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
 </nav>
 <div class="rv-menu" id="rv-menu" role="dialog" aria-label="Rutas">
 <div class="rv-pane" id="rv-pane-list" role="tabpanel" aria-labelledby="rv-tab-list"><label class="rv-menu-field"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="rv-q" type="text" inputmode="search" enterkeyhint="go" placeholder="Buscar ruta, pueblo o ciclista" autocomplete="off" aria-label="Buscar ruta, pueblo o ciclista"/></label><div class="rv-menu-list" id="archive-list" role="listbox" aria-label="Todas las rutas"></div></div>
@@ -620,7 +638,8 @@ const BASEMAP=MAP_STYLE in CARTO_STYLES
  ?{tile:(z,x,y)=>`https://basemaps.cartocdn.com/rastertiles/${CARTO_STYLES[MAP_STYLE]}/${z}/${x}/${y}${RETINA}.png?key=${CARTO_KEY}`,leaflet:`https://basemaps.cartocdn.com/rastertiles/${CARTO_STYLES[MAP_STYLE]}/{z}/{x}/{y}${RETINA}.png?key=${CARTO_KEY}`,subdomains:'',maxZoom:20,credit:'© OpenStreetMap · © CARTO',line:'#cefb11',casing:MAP_STYLE!=='dark'}
  :{tile:(z,x,y)=>`https://tile.openstreetmap.org/${z}/${x}/${y}.png`,leaflet:'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',subdomains:'abc',maxZoom:18,credit:'© OpenStreetMap',line:'#d9ef78',casing:false};
 document.documentElement.classList.add(MAP_STYLE==='dark'?'map-dark':MAP_STYLE==='osm'?'map-osm':'map-light');
-const ROUTES_URL='data/routes.json',RIDERS_URL='data/riders.json',ROUTE_TZ='Europe/Madrid';
+const SITE_BASE=new URL('./',location.href).href;
+const ROUTES_URL=SITE_BASE+'data/routes.json',RIDERS_URL=SITE_BASE+'data/riders.json',ROUTE_TZ='Europe/Madrid';
 const ROUTE_TYPE='MTB';
 const people={"tochi": ["Tochi", "El CEO de las cuestas.", "No convoca reuniones: convoca rutas. Siempre tiene un plan, una subida más y energía de sobra para convencernos de que hoy toca sufrir un poquito."], "david": ["David", "Fondo infinito. Gadgets también.", "Mientras el resto pregunta cuánto queda, él todavía está calentando. Tiene más kilómetros en las piernas y más equipamiento en la bici que una tienda especializada."], "jorge": ["Jorge", "Experto en posponer la alarma.", "Alguna vez se queda dormido y pierde la salida. Pero cuando aparece, viene con ganas, alguna foto y la firme convicción de que el madrugón merecía la pena."], "javi": ["Javi", "Cero quejas. Máxima técnica.", "Elige la trazada que nadie ve, pasa por donde otros dudan y sigue sumando kilómetros sin protestar. Tanto, que a veces parece que no le cuesta."]};
 let routes=[];let routesState='loading';let riderNames={};const trackCache=new Map();let activeRouteId=null;let mapInstance=null;let lastFocus=null;let toastTimer;
@@ -663,6 +682,8 @@ async function loadRoutes(){
   routes=db.routes.filter(r=>r&&r.id&&r.date).map(toView);routesState='ready';
  }catch(e){console.error('No se pudieron cargar las rutas:',e);routesState='error'}
  renderRecent();if(overlay.classList.contains('open'))renderArchive();
+ const deep=decodeURIComponent((location.hash.match(/^#ruta\/(.+)$/)||[])[1]||'');
+ if(deep&&routes.some(r=>r.id===deep))openArchive(deep);
 }
 function getRecent(){return [...routes].sort((a,b)=>sortKey(b).localeCompare(sortKey(a))).slice(0,3)}
 
@@ -723,11 +744,19 @@ function renderRecent(){
 /* v0.36 — route viewer: full-bleed map, floating dock (prev · route · next · search · list · close) */
 const overlay=document.getElementById('archive-overlay');const shell=document.getElementById('rv-shell');
 const rvOrdered=()=>[...routes].sort((a,b)=>sortKey(b).localeCompare(sortKey(a)));
-function openArchive(id,{list=false}={}){lastFocus=document.activeElement;activeRouteId=id||rvOrdered()[0]?.id||null;renderArchive();overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');requestAnimationFrame(()=>{(list?document.getElementById('rv-menu-btn'):document.getElementById('close-archive')).focus();if(list)openRvMenu({tab:'list'})})}
-function closeArchive(){closeRvMenu();overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');if(mapInstance){mapInstance.remove();mapInstance=null}lastFocus?.focus()}
+function openArchive(id,{list=false}={}){lastFocus=document.activeElement;activeRouteId=id||rvOrdered()[0]?.id||null;renderArchive();overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');routeUrl(activeRouteId);requestAnimationFrame(()=>{(list?document.getElementById('rv-menu-btn'):document.getElementById('close-archive')).focus();if(list)openRvMenu({tab:'list'})})}
+function closeArchive(){closeRvMenu();routeUrl(null);overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');if(mapInstance){mapInstance.remove();mapInstance=null}lastFocus?.focus()}
 document.getElementById('open-archive').addEventListener('click',()=>openArchive(null,{list:true}));document.getElementById('close-archive').addEventListener('click',closeArchive);
+/* While a route is open the address bar holds its share link, so copying it from the browser also gives the preview. */
+const shareUrl=id=>SITE_BASE+'rutas/'+encodeURIComponent(id)+'/';
+function routeUrl(id){try{history.replaceState(null,'',id?shareUrl(id):SITE_BASE+'#rutas')}catch{}}
+async function shareRoute(){const r=routes.find(x=>x.id===activeRouteId);if(!r)return;const url=shareUrl(r.id),btn=document.getElementById('rv-share');
+ if(navigator.share){try{await navigator.share({title:r.title+' · Cadencia / Decadencia',url});return}catch(e){if(e&&e.name==='AbortError')return}}
+ try{await navigator.clipboard.writeText(url)}catch{window.prompt('Copia el enlace de la ruta:',url);return}
+ btn.classList.add('copied');clearTimeout(btn._t);btn._t=setTimeout(()=>btn.classList.remove('copied'),1800)}
+document.getElementById('rv-share').addEventListener('click',shareRoute);
 function rvGo(step){const list=rvOrdered(),k=list.findIndex(r=>r.id===activeRouteId)+step;if(k<0||k>=list.length)return;rvShow(list[k].id)}
-function rvShow(id){const c=document.getElementById('archive-detail');c.classList.add('rv-leaving');setTimeout(()=>{activeRouteId=id;renderArchive();c.classList.remove('rv-leaving');shell.scrollTo({top:0});c.scrollTo({top:0})},170)}
+function rvShow(id){const c=document.getElementById('archive-detail');c.classList.add('rv-leaving');setTimeout(()=>{activeRouteId=id;renderArchive();routeUrl(id);c.classList.remove('rv-leaving');shell.scrollTo({top:0});c.scrollTo({top:0})},170)}
 /* Routes panel: one entry point with two views, a searchable list and a calendar of ride days */
 const rvMenu=document.getElementById('rv-menu'),rvMenuBtn=document.getElementById('rv-menu-btn'),rvQ=document.getElementById('rv-q'),rvDock=document.querySelector('.rv-dock'),rvTabs=document.querySelector('.rv-tabs');
 let rvTab='list',rvCalMonth=null;
@@ -800,7 +829,7 @@ function ridersMarkup(r){
  const many=ids.length>1;
  return `<div class="rv-riders">${ids.map(id=>{const own=acts.find(a=>a.rider===id);const extra=many&&own?.distance_km!=null?`<small>${fmtKm(Math.round(own.distance_km*10)/10)} km</small>`:'';const link=own?.url?` href="${escapeHtml(own.url)}" target="_blank" rel="noopener noreferrer"`:'';return own?.url?`<a class="rv-rider"${link}>${escapeHtml(riderName(id))}${extra}</a>`:`<span class="rv-rider">${escapeHtml(riderName(id))}${extra}</span>`}).join('')}</div>`;
 }
-function fetchTrack(path){if(!trackCache.has(path))trackCache.set(path,fetch(path,{cache:'force-cache'}).then(res=>{if(!res.ok)throw Error('HTTP '+res.status);return res.json()}).then(t=>{const pts=(t.points||[]).filter(p=>Number.isFinite(p[0])&&Number.isFinite(p[1])).map(p=>[p[0],p[1]]);if(pts.length<2)throw Error('Track vacío');return pts}).catch(e=>{trackCache.delete(path);throw e}));return trackCache.get(path)}
+function fetchTrack(path){if(!trackCache.has(path))trackCache.set(path,fetch(new URL(path,SITE_BASE),{cache:'force-cache'}).then(res=>{if(!res.ok)throw Error('HTTP '+res.status);return res.json()}).then(t=>{const pts=(t.points||[]).filter(p=>Number.isFinite(p[0])&&Number.isFinite(p[1])).map(p=>[p[0],p[1]]);if(pts.length<2)throw Error('Track vacío');return pts}).catch(e=>{trackCache.delete(path);throw e}));return trackCache.get(path)}
 function renderDetail(r){
  if(mapInstance){mapInstance.remove();mapInstance=null}
  const detail=document.getElementById('archive-detail'),box=document.getElementById('route-map');
